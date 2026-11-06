@@ -1,0 +1,33 @@
+
+.item {
+  list-style: none;
+}
+
+.button {
+  display: block;
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: #383838;
+  text-align: left;
+  font-size: 19px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.button:hover:not(.selected) {
+  background: rgba(53, 71, 255, 0.08);
+}
+
+.button.selected {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}

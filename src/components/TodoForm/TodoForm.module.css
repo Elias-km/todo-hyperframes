@@ -1,0 +1,212 @@
+
+/* Modal */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 36px 20px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  overflow-y: auto;
+  place-items: start center;
+}
+
+.backdrop[open] {
+  display: grid;
+}
+
+.backdrop:not([open]) {
+  display: none;
+}
+
+.backdrop::backdrop {
+  background: rgba(30, 40, 55, 0.12);
+}
+
+.modal {
+  width: min(820px, 100%);
+  padding: 56px 58px;
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.13);
+}
+
+/* Formulario */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form label {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.input {
+  width: 100%;
+  height: 70px;
+  padding: 0 24px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: #333333;
+  font-size: 19px;
+}
+
+.input::placeholder {
+  color: #999999;
+}
+
+.input:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Botones */
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 18px;
+  margin-top: 4px;
+}
+
+.primaryButton,
+.secondaryButton {
+  min-width: 150px;
+  height: 58px;
+  padding: 0 25px;
+  border-radius: 999px;
+  font-size: 17px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.primaryButton {
+  border: 1.5px solid var(--primary);
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.secondaryButton {
+  border: 1.5px solid var(--primary);
+  background: #ffffff;
+  color: var(--primary);
+}
+
+.primaryButton:hover {
+  background: var(--primary-hover);
+}
+
+.secondaryButton:hover {
+  background: rgba(53, 71, 255, 0.08);
+}
+
+/* Animación de apertura */
+
+.backdrop[open]:not(.closing) {
+  animation: fadeIn 220ms ease-out both;
+}
+
+.backdrop[open]:not(.closing) .modal {
+  animation: slideIn 220ms ease-out both;
+}
+
+/* Animación de cierre */
+
+.backdrop.closing {
+  animation: fadeOut 180ms ease-in both;
+  pointer-events: none;
+}
+
+.backdrop.closing .modal {
+  animation: slideOut 180ms ease-in both;
+}
+
+/* Keyframes */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+/* Responsive */
+
+@media (max-width: 640px) {
+  .backdrop {
+    padding: 20px 12px;
+  }
+
+  .modal {
+    padding: 30px 22px;
+    border-radius: 18px;
+  }
+
+  .input {
+    height: 60px;
+  }
+
+  .actions {
+    flex-wrap: wrap;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    flex: 1;
+    min-width: 100px;
+  }
+}
+
+/* Accesibilidad */
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .backdrop .modal {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

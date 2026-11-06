@@ -1,0 +1,33 @@
+
+.container {
+  position: relative;
+  min-height: 255px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-height: 255px;
+  margin: 0;
+  padding: 10px 12px;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: #777777;
+  font-size: 17px;
+  pointer-events: none;
+}
+
+.empty[hidden] {
+  display: none;
+}
