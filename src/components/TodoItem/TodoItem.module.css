@@ -11,7 +11,7 @@
   border: none;
   border-radius: 0;
   background: transparent;
-  color: #383838;
+  color: var(--item-color, #383838);
   text-align: left;
   font-size: 19px;
   line-height: 1.4;
@@ -24,7 +24,7 @@
 
 .button.selected {
   background: var(--primary);
-  color: #ffffff;
+  color: var(--selected-text, #ffffff);
 }
 
 .button:focus-visible {

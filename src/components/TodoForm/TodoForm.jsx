@@ -11,7 +11,7 @@ export default function TodoForm({ open, onClose, onAdd }) {
 
     if (open && !dialog.open) {
       dialog.showModal();
-      dialog.querySelector("input")?.focus();
+      dialog.querySelector('input')?.focus();
     } else if (!open && dialog.open) {
       dialog.close();
     }
@@ -74,7 +74,6 @@ export default function TodoForm({ open, onClose, onAdd }) {
             type="text"
             placeholder="Type the text here..."
             autoComplete="off"
-            autoFocus
             required
             value={text}
             onChange={(event) => setText(event.target.value)}

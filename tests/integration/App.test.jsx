@@ -155,3 +155,43 @@ describe('App - integración', () => {
     expect(loadTodos()).toEqual(initialTodos);
   });
 });
+
+describe('Theme - integración', () => {
+  it('alterna Claro, Oscuro, Radioactivo y Claro', async () => {
+    const user = setup();
+
+    await user.click(screen.getByRole('button', {
+      name: 'Switch to light theme',
+    }));
+
+    await user.click(screen.getByRole('button', {
+      name: 'Switch to dark theme',
+    }));
+
+    expect(document.documentElement.dataset.theme).toBe('dark');
+
+    await user.click(screen.getByRole('button', {
+      name: 'Switch to radioactive theme',
+    }));
+
+    expect(document.documentElement.dataset.theme).toBe('radioactive');
+
+    await user.click(screen.getByRole('button', {
+      name: 'Switch to light theme',
+    }));
+
+    expect(document.documentElement.dataset.theme).toBe('light');
+    expect(localStorage.getItem('todo-react:theme')).toBe('light');
+  });
+
+  it('recupera el último tema seleccionado', () => {
+    localStorage.setItem('todo-react:theme', 'radioactive');
+    setup();
+
+    expect(document.documentElement.dataset.theme).toBe('radioactive');
+
+    expect(screen.getByRole('button', {
+      name: 'Switch to light theme',
+    })).toBeTruthy();
+  });
+});

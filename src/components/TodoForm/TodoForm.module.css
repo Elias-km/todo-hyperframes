@@ -27,15 +27,15 @@
 }
 
 .backdrop::backdrop {
-  background: rgba(30, 40, 55, 0.12);
+  background: var(--modal-backdrop, rgba(30, 40, 55, 0.12));
 }
 
 .modal {
   width: min(820px, 100%);
   padding: 56px 58px;
   border-radius: 24px;
-  background: #ffffff;
-  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.13);
+  background: var(--card-background, #ffffff);
+  box-shadow: var(--modal-shadow, 0 14px 35px rgba(0, 0, 0, 0.13));
 }
 
 /* Formulario */
@@ -57,12 +57,12 @@
   padding: 0 24px;
   border: 1px solid var(--border);
   background: var(--surface);
-  color: #333333;
+  color: var(--input-color, #333333);
   font-size: 19px;
 }
 
 .input::placeholder {
-  color: #999999;
+  color: var(--placeholder-color, #999999);
 }
 
 .input:focus-visible {
@@ -94,13 +94,13 @@
 .primaryButton {
   border: 1.5px solid var(--primary);
   background: var(--primary);
-  color: #ffffff;
+  color: var(--selected-text, #ffffff);
 }
 
 .secondaryButton {
   border: 1.5px solid var(--primary);
-  background: #ffffff;
-  color: var(--primary);
+  background: var(--card-background, #ffffff);
+  color: var(--control-color, var(--primary));
 }
 
 .primaryButton:hover {
@@ -108,7 +108,7 @@
 }
 
 .secondaryButton:hover {
-  background: rgba(53, 71, 255, 0.08);
+  background: var(--hover-color, rgba(53, 71, 255, 0.08));
 }
 
 /* Animación de apertura */
@@ -210,3 +210,4 @@
     transition-duration: 0.01ms !important;
   }
 }
+

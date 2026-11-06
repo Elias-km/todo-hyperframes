@@ -260,3 +260,276 @@ input:focus-visible {
     min-width: 0;
   }
 }
+
+/* Dark theme */
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  color: #f1f5ff;
+
+  --border: #536178;
+  --surface: #283449;
+  --card-background: #1d2739;
+  --item-color: #f1f5ff;
+  --muted-color: #bcc6d8;
+  --input-color: #f1f5ff;
+  --placeholder-color: #aab6cb;
+  --control-color: #aab4ff;
+  --hover-color: rgba(160, 175, 255, 0.14);
+  --modal-backdrop: rgba(0, 0, 0, 0.55);
+  --modal-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
+}
+
+:root[data-theme='dark'] body {
+  background: linear-gradient(110deg, #10192b, #203453);
+}
+
+:root[data-theme='dark'] .card {
+  background: var(--card-background);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+}
+
+:root[data-theme='dark'] .icon-button,
+:root[data-theme='dark'] .ghost-button {
+  color: var(--control-color);
+  border-color: var(--control-color);
+}
+
+:root[data-theme='dark'] .icon-button:hover:not(:disabled),
+:root[data-theme='dark'] .ghost-button:hover:not(:disabled) {
+  background: var(--hover-color);
+}
+
+:root[data-theme='dark'] .share-feedback {
+  color: var(--muted-color);
+}
+
+:root[data-theme='dark'] button:focus-visible,
+:root[data-theme='dark'] input:focus-visible {
+  outline-color: var(--control-color);
+}
+
+/* Theme and language controls */
+
+.card {
+  position: relative;
+}
+
+.preferences {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1.5px solid var(--control-color, var(--primary));
+  border-radius: 50%;
+  background: transparent;
+  color: var(--control-color, var(--primary));
+}
+
+.theme-toggle:hover {
+  background: var(--hover-color, rgba(53, 71, 255, 0.08));
+}
+
+.theme-toggle svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding-top: 76px;
+  }
+
+  .preferences {
+    top: 12px;
+    right: 16px;
+  }
+}
+
+/* Theme selector */
+
+
+
+
+
+/* Radioactive theme */
+
+:root[data-theme='radioactive'] {
+  color-scheme: dark;
+  color: #eaffdb;
+
+  --primary: #baff29;
+  --primary-hover: #d5ff63;
+  --border: #9451db;
+  --surface: #19251c;
+  --card-background: #111a15;
+  --item-color: #eaffdb;
+  --muted-color: #faff57;
+  --input-color: #eaffdb;
+  --placeholder-color: #adbd9c;
+  --control-color: #baff29;
+  --hover-color: rgba(189, 112, 255, 0.2);
+  --modal-backdrop: rgba(7, 3, 13, 0.72);
+  --modal-shadow: 0 0 35px rgba(189, 112, 255, 0.22);
+  --selected-text: #111a15;
+}
+
+:root[data-theme='radioactive'] body {
+  background:
+    radial-gradient(ellipse at 15% 15%, #293e16 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 85%, #302044 0%, transparent 50%),
+    #080e0b;
+}
+
+:root[data-theme='radioactive'] .card {
+  background: var(--card-background);
+  border: 1px solid #9451db;
+  box-shadow:
+    0 0 25px rgba(186, 255, 41, 0.12),
+    0 0 45px rgba(189, 112, 255, 0.12);
+}
+
+:root[data-theme='radioactive'] .icon-button,
+:root[data-theme='radioactive'] .ghost-button {
+  border-color: #bd70ff;
+  color: #faff57;
+}
+
+:root[data-theme='radioactive'] .icon-button:hover:not(:disabled),
+:root[data-theme='radioactive'] .ghost-button:hover:not(:disabled) {
+  background: var(--hover-color);
+}
+
+:root[data-theme='radioactive'] .primary-button {
+  color: #111a15;
+}
+
+:root[data-theme='radioactive'] .share-feedback {
+  color: var(--muted-color);
+}
+
+:root[data-theme='radioactive'] button:focus-visible,
+:root[data-theme='radioactive'] input:focus-visible {
+  outline-color: #faff57;
+}
+
+
+
+/* Radioactive liquid effects */
+
+:root[data-theme='radioactive'] .card {
+  isolation: isolate;
+  background:
+    radial-gradient(
+      ellipse at 15% 20%,
+      rgba(186, 255, 41, 0.12),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 85% 80%,
+      rgba(189, 112, 255, 0.16),
+      transparent 55%
+    ),
+    var(--card-background);
+
+  background-size: 140% 140%, 140% 140%, auto;
+  animation: radioactive-ambient 10s ease-in-out infinite alternate;
+}
+
+/* Movimiento lento de la sustancia luminosa */
+
+@keyframes radioactive-ambient {
+  0% {
+    background-position: 0% 0%, 100% 100%;
+  }
+
+  50% {
+    background-position: 60% 30%, 20% 65%;
+  }
+
+  100% {
+    background-position: 100% 80%, 0% 20%;
+  }
+}
+
+/* Capa que contiene las ondas */
+
+.radioactive-wave-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Ondulación que nace del punto pulsado */
+
+.radioactive-wave {
+  position: absolute;
+  display: block;
+  width: 520px;
+  height: 520px;
+  border: 2px solid rgba(186, 255, 41, 0.9);
+  border-radius: 50%;
+
+  background: radial-gradient(
+    circle,
+    rgba(186, 255, 41, 0.04) 0%,
+    rgba(189, 112, 255, 0.12) 38%,
+    rgba(250, 255, 87, 0.08) 55%,
+    transparent 70%
+  );
+
+  box-shadow:
+    0 0 18px rgba(186, 255, 41, 0.65),
+    inset 0 0 40px rgba(189, 112, 255, 0.4);
+
+  transform: translate(-50%, -50%) scale(0.02);
+  transform-origin: center;
+  animation: radioactive-ripple 850ms ease-out forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes radioactive-ripple {
+  0% {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(0.02);
+  }
+
+  35% {
+    opacity: 0.7;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.45);
+  }
+}
+
+/* Respetar las preferencias de accesibilidad */
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-theme='radioactive'] .card {
+    animation: none;
+  }
+
+  .radioactive-wave-layer {
+    display: none;
+  }
+}

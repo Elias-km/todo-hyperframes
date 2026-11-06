@@ -23,7 +23,7 @@
   display: grid;
   place-items: center;
   margin: 0;
-  color: #777777;
+  color: var(--muted-color, #777777);
   font-size: 17px;
   pointer-events: none;
 }
