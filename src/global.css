@@ -533,3 +533,9 @@ input:focus-visible {
     display: none;
   }
 }
+
+/* Keep preference controls above radioactive effects */
+
+.preferences {
+  z-index: 10;
+}

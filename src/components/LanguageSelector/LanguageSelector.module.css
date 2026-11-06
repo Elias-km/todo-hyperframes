@@ -1,0 +1,96 @@
+.selector {
+  position: relative;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 66px;
+  height: 42px;
+  padding: 0 8px;
+  border: 1.5px solid var(--control-color, var(--primary));
+  border-radius: 999px;
+  background: transparent;
+  color: var(--control-color, var(--primary));
+  cursor: pointer;
+  list-style: none;
+}
+
+.trigger::-webkit-details-marker {
+  display: none;
+}
+
+.trigger:hover,
+.selector[open] .trigger {
+  background: var(--hover-color, rgba(53, 71, 255, 0.08));
+}
+
+.trigger:focus-visible {
+  outline: 2px solid var(--control-color, var(--primary));
+  outline-offset: 3px;
+}
+
+.chevron {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.flag,
+.emojiFlag {
+  display: block;
+  flex: 0 0 25px;
+  width: 25px;
+  height: 18px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.flag {
+  border: 1px solid rgba(127, 127, 127, 0.25);
+}
+
+.emojiFlag {
+  font-size: 22px;
+  line-height: 18px;
+  text-align: center;
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 30;
+  width: 190px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card-background, #ffffff);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 11px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--item-color, #333333);
+  text-align: left;
+  font-size: 14px;
+}
+
+.option:hover,
+.option[aria-pressed='true'] {
+  background: var(--hover-color, rgba(53, 71, 255, 0.08));
+}
+
+.check {
+  margin-left: auto;
+  color: var(--control-color, var(--primary));
+  font-weight: 600;
+}

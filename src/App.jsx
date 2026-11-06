@@ -1,4 +1,7 @@
 import { useEffect, useLayoutEffect, useReducer, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import './i18n/i18n.js';
+import LanguageSelector from './components/LanguageSelector/LanguageSelector.jsx';
 import TodoForm from './components/TodoForm/TodoForm.jsx';
 import TodoList from './components/TodoList/TodoList.jsx';
 import {
@@ -10,6 +13,7 @@ import { shareTodos } from './shareTodos/shareTodos.js';
 import { loadTheme, saveTheme } from "./theme/theme.js";
 
 export default function App({ initialTodos }) {
+  const { t } = useTranslation();
   const [state, dispatch] = useReducer(
     todoReducer,
     initialTodos,
@@ -49,9 +53,9 @@ export default function App({ initialTodos }) {
     const result = await shareTodos(state.todos);
 
     if (result === 'copied') {
-      setShareFeedback('List copied to clipboard.');
+      setShareFeedback('copied');
     } else if (result === 'failed') {
-      setShareFeedback('Unable to share or copy the list.');
+      setShareFeedback('shareFailed');
     }
   }
 
@@ -97,7 +101,11 @@ export default function App({ initialTodos }) {
     radioactive: 'light',
   }[theme];
 
-  const themeLabel = `Switch to ${nextTheme} theme`;
+  const themeLabel = t({
+    light: 'themeLight',
+    dark: 'themeDark',
+    radioactive: 'themeRadioactive',
+  }[nextTheme]);
 
   return (
     <main className="app-shell">
@@ -135,6 +143,7 @@ export default function App({ initialTodos }) {
               </svg>
             )}
           </button>
+          <LanguageSelector />
         </div>
 
         {theme === 'radioactive' && (
@@ -161,11 +170,7 @@ export default function App({ initialTodos }) {
           ToDo List React
         </h1>
 
-        <p className="description">
-          Organize your tasks with a simple, lightweight app.
-          Add and remove items, select multiple tasks, undo and redo
-          changes, and keep your list automatically saved in your browser.
-        </p>
+        <p className="description">{t('description')}</p>
 
         <TodoList
           todos={state.todos}
@@ -175,7 +180,8 @@ export default function App({ initialTodos }) {
         />
 
         <p className="sr-only" role="status">
-          {state.todos.length} items. {state.selectedIds.size} selected.
+{t('items', { count: state.todos.length })}.{' '}
+          {t('selected', { count: state.selectedIds.size })}.
         </p>
 
         <div className="actions">
@@ -183,8 +189,8 @@ export default function App({ initialTodos }) {
             <button
               type="button"
               className="icon-button"
-              aria-label="Undo"
-              title="Undo"
+              aria-label={t('undo')}
+              title={t('undo')}
               disabled={state.history.length === 0}
               onClick={() => handleAction({ type: 'undo' })}
             >
@@ -197,8 +203,8 @@ export default function App({ initialTodos }) {
             <button
               type="button"
               className="icon-button"
-              aria-label="Redo"
-              title="Redo"
+              aria-label={t('redo')}
+              title={t('redo')}
               disabled={state.future.length === 0}
               onClick={() => handleAction({ type: 'redo' })}
             >
@@ -214,7 +220,7 @@ export default function App({ initialTodos }) {
               disabled={state.selectedIds.size === 0}
               onClick={() => handleAction({ type: 'removeSelected' })}
             >
-              DELETE
+              {t('delete')}
             </button>
           </div>
 
@@ -222,8 +228,8 @@ export default function App({ initialTodos }) {
             <button
               type="button"
               className="icon-button"
-              aria-label="Share"
-              title="Share"
+              aria-label={t('share')}
+              title={t('share')}
               disabled={state.todos.length === 0}
               onClick={handleShare}
             >
@@ -241,14 +247,14 @@ export default function App({ initialTodos }) {
               className="primary-button"
               onClick={() => setFormOpen(true)}
             >
-              ADD
+              {t('add')}
             </button>
           </div>
         </div>
 
         {shareFeedback && (
           <p className="share-feedback" role="status">
-            {shareFeedback}
+            {t(shareFeedback)}
           </p>
         )}
       </section>

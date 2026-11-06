@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import TodoItem from '../TodoItem/TodoItem.jsx';
 import styles from './TodoList.module.css';
 
@@ -7,9 +8,11 @@ export default function TodoList({
   onToggle,
   onRemove,
 }) {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.container}>
-      <ul className={styles.list} aria-label="Lista de tareas">
+      <ul className={styles.list} aria-label={t('listLabel')}>
         {todos.map((todo) => (
           <TodoItem
             key={todo.id}
@@ -22,7 +25,7 @@ export default function TodoList({
       </ul>
 
       {todos.length === 0 && (
-        <p className={styles.empty}>No items yet.</p>
+        <p className={styles.empty}>{t('empty')}</p>
       )}
     </section>
   );

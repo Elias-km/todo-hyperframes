@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './TodoForm.module.css';
 
 export default function TodoForm({ open, onClose, onAdd }) {
+  const { t } = useTranslation();
   const dialogRef = useRef(null);
   const [text, setText] = useState('');
   const [closing, setClosing] = useState(false);
@@ -65,14 +67,14 @@ export default function TodoForm({ open, onClose, onAdd }) {
       <div className={styles.modal}>
         <form className={styles.form} onSubmit={handleSubmit}>
           <label id="todo-dialog-title" htmlFor="todo-input">
-            Add item to list
+            {t('addLabel')}
           </label>
 
           <input
             id="todo-input"
             className={styles.input}
             type="text"
-            placeholder="Type the text here..."
+            placeholder={t('placeholder')}
             autoComplete="off"
             required
             value={text}
@@ -81,7 +83,7 @@ export default function TodoForm({ open, onClose, onAdd }) {
 
           <div className={styles.actions}>
             <button type="submit" className={styles.primaryButton}>
-              ADD
+              {t('add')}
             </button>
 
             <button
@@ -89,7 +91,7 @@ export default function TodoForm({ open, onClose, onAdd }) {
               className={styles.secondaryButton}
               onClick={close}
             >
-              CANCEL
+              {t('cancel')}
             </button>
           </div>
         </form>
