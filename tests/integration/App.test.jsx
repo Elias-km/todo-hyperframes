@@ -40,10 +40,10 @@ function setup() {
 
 async function openForm(user) {
   const card = screen.getByRole('region', {
-    name: 'ToDo List React',
+    name: 'ToDo IA',
   });
 
-  await user.click(within(card).getByRole('button', { name: 'ADD' }));
+  await user.click(within(card).getByRole('button', { name: 'AÑADIR' }));
 
   return screen.getByRole('dialog');
 }
@@ -61,7 +61,7 @@ describe('App - integración', () => {
     })).toBeTruthy();
 
     expect(screen.getByRole('button', {
-      name: 'DELETE',
+      name: 'ELIMINAR',
     }).disabled).toBe(true);
 
     expect(loadTodos()).toEqual(initialTodos);
@@ -76,7 +76,7 @@ describe('App - integración', () => {
 
     await user.type(input, '   ');
     await user.click(within(dialog).getByRole('button', {
-      name: 'ADD',
+      name: 'AÑADIR',
     }));
 
     expect(screen.getAllByRole('listitem')).toHaveLength(2);
@@ -111,16 +111,16 @@ describe('App - integración', () => {
     }).getAttribute('aria-pressed')).toBe('true');
 
     await user.click(screen.getByRole('button', {
-      name: 'DELETE',
+      name: 'ELIMINAR',
     }));
 
     expect(screen.queryAllByRole('listitem')).toHaveLength(0);
 
-    await user.click(screen.getByRole('button', { name: 'Undo' }));
+    await user.click(screen.getByRole('button', { name: 'Deshacer' }));
 
     expect(screen.getAllByRole('listitem')).toHaveLength(2);
 
-    await user.click(screen.getByRole('button', { name: 'Redo' }));
+    await user.click(screen.getByRole('button', { name: 'Rehacer' }));
 
     expect(screen.queryAllByRole('listitem')).toHaveLength(0);
     expect(loadTodos()).toEqual([]);
@@ -147,7 +147,7 @@ describe('App - integración', () => {
     await user.type(within(dialog).getByRole('textbox'), 'Descartada');
 
     await user.click(within(dialog).getByRole('button', {
-      name: 'CANCEL',
+      name: 'CANCELAR',
     }));
 
     expect(dialog.open).toBe(false);
@@ -161,33 +161,33 @@ describe('Theme - integración', () => {
     const user = setup();
 
     await user.click(screen.getByRole('button', {
-      name: 'Switch to dark theme',
+      name: 'Cambiar al tema oscuro',
     }));
 
     expect(document.documentElement.dataset.theme).toBe('dark');
 
     await user.click(screen.getByRole('button', {
-      name: 'Switch to radioactive theme',
+      name: 'Cambiar al tema radioactivo',
     }));
 
     expect(document.documentElement.dataset.theme).toBe('radioactive');
 
     await user.click(screen.getByRole('button', {
-      name: 'Switch to light theme',
+      name: 'Cambiar al tema claro',
     }));
 
     expect(document.documentElement.dataset.theme).toBe('light');
-    expect(localStorage.getItem('todo-react:theme')).toBe('light');
+    expect(localStorage.getItem('todo-ia:theme')).toBe('light');
   });
 
   it('recupera el último tema seleccionado', () => {
-    localStorage.setItem('todo-react:theme', 'radioactive');
+    localStorage.setItem('todo-ia:theme', 'radioactive');
     setup();
 
     expect(document.documentElement.dataset.theme).toBe('radioactive');
 
     expect(screen.getByRole('button', {
-      name: 'Switch to light theme',
+      name: 'Cambiar al tema claro',
     })).toBeTruthy();
   });
 });

@@ -158,7 +158,7 @@ export default function App({ initialTodos }) {
         )}
 
         <h1 id="app-title" className="title">
-          ToDo List React
+          ToDo IA
         </h1>
 
         <p className="description">{t('description')}</p>

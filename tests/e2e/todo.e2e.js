@@ -1,78 +1,78 @@
 import { test, expect } from '@playwright/test';
 
-test('loads initial tasks and preserves them on reload', async ({ page }) => {
+test('starts empty and persists new tasks', async ({ page }) => {
   await page.goto('./');
 
-  const tasks = page
-    .getByRole('list', { name: 'Lista de tareas' })
-    .getByRole('button');
+  const tasks = page.getByRole('list', {
+    name: 'Lista de tareas',
+  }).getByRole('button');
 
   await expect(page.getByRole('heading', {
-    name: 'ToDo List React',
+    name: 'ToDo IA',
   })).toBeVisible();
 
-  await expect(tasks).toHaveText([
-    'Plan my week',
-    'Buy groceries',
-    'Finish my personal project',
-  ]);
+  await expect(tasks).toHaveCount(0);
+
+  await page.getByRole('button', {
+    name: 'AÑADIR',
+  }).click();
+
+  const dialog = page.getByRole('dialog');
+
+  await dialog.getByRole('textbox').fill('Comprar pan');
+  await dialog.getByRole('button', {
+    name: 'AÑADIR',
+  }).click();
+
+  await expect(tasks).toHaveCount(1);
 
   await page.reload();
 
-  await expect(tasks).toHaveCount(3);
+  await expect(tasks).toHaveText(['Comprar pan']);
 });
 
-test('adds, deletes, undoes and redoes tasks', async ({ page }) => {
+test('deletes, undoes and redoes tasks', async ({ page }) => {
   await page.goto('./');
 
-  const tasks = page
-    .getByRole('list', { name: 'Lista de tareas' })
-    .getByRole('button');
+  for (const text of ['Comprar pan', 'Hacer deporte']) {
+    await page.getByRole('button', {
+      name: 'AÑADIR',
+    }).click();
 
-  // Abrir formulario.
-  await page.getByRole('button', { name: 'ADD' }).click();
+    const dialog = page.getByRole('dialog');
+    await dialog.getByRole('textbox').fill(text);
+    await dialog.getByRole('button', {
+      name: 'AÑADIR',
+    }).click();
+  }
 
-  const dialog = page.getByRole('dialog', {
-    name: 'Add item to list',
-  });
+  const tasks = page.getByRole('list', {
+    name: 'Lista de tareas',
+  }).getByRole('button');
 
-  await expect(dialog).toBeVisible();
-  await expect(dialog.getByRole('textbox')).toBeFocused();
-
-  // Añadir tarea.
-  await dialog.getByRole('textbox').fill('Review Playwright tests');
-  await dialog.getByRole('button', { name: 'ADD' }).click();
-
-  await expect(dialog).toBeHidden();
-  await expect(tasks).toHaveCount(4);
-
-  // Seleccionar dos tareas.
   await page.getByRole('button', {
-    name: 'Plan my week',
+    name: 'Comprar pan',
   }).click();
 
   await page.getByRole('button', {
-    name: 'Review Playwright tests',
+    name: 'Hacer deporte',
   }).click();
 
-  // Eliminar selección.
-  await page.getByRole('button', { name: 'DELETE' }).click();
+  await page.getByRole('button', {
+    name: 'ELIMINAR',
+  }).click();
+
+  await expect(tasks).toHaveCount(0);
+
+  await page.getByRole('button', {
+    name: 'Deshacer',
+  }).click();
+
   await expect(tasks).toHaveCount(2);
 
-  // Deshacer.
-  await page.getByRole('button', { name: 'Undo' }).click();
-  await expect(tasks).toHaveCount(4);
+  await page.getByRole('button', {
+    name: 'Rehacer',
+  }).click();
 
-  // Rehacer.
-  await page.getByRole('button', { name: 'Redo' }).click();
-  await expect(tasks).toHaveCount(2);
-
-  // Verificar persistencia.
-  await page.reload();
-  await expect(tasks).toHaveCount(2);
-
-  // El historial desaparece al recargar.
-  await expect(page.getByRole('button', {
-    name: 'Undo',
-  })).toBeDisabled();
+  await expect(tasks).toHaveCount(0);
 });

@@ -24,7 +24,7 @@ describe('theme', () => {
 
     expect(saveTheme('radioactive', storage)).toBe(true);
     expect(storage.setItem).toHaveBeenCalledWith(
-      'todo-react:theme',
+      'todo-ia:theme',
       'radioactive'
     );
   });

@@ -1,4 +1,4 @@
-const TITLE = 'ToDo List React';
+const TITLE = 'ToDo IA';
 
 export function formatShareText(todos) {
   const items = todos.map(({ text }) => `- ${text}`).join('\n');

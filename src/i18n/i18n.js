@@ -2,15 +2,15 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { resources } from './translations.js';
 
-const STORAGE_KEY = 'todo-react:language';
-const supportedLanguages = ['en', 'es', 'ca', 'gl', 'eu'];
+const STORAGE_KEY = 'todo-ia:language';
+const supportedLanguages = ['es', 'en'];
 
 function loadLanguage() {
   try {
     const language = localStorage.getItem(STORAGE_KEY);
-    return supportedLanguages.includes(language) ? language : 'en';
+    return supportedLanguages.includes(language) ? language : 'es';
   } catch {
-    return 'en';
+    return 'es';
   }
 }
 
@@ -21,7 +21,7 @@ document.documentElement.lang = initialLanguage;
 i18n.use(initReactI18next).init({
   resources,
   lng: initialLanguage,
-  fallbackLng: 'en',
+  fallbackLng: 'es',
   supportedLngs: supportedLanguages,
   interpolation: {
     escapeValue: false,

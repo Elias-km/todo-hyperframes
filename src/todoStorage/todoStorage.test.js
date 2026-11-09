@@ -51,7 +51,7 @@ describe('todoStorage', () => {
 
     expect(saveTodos(todos, storage)).toBe(true);
     expect(storage.setItem).toHaveBeenCalledWith(
-      'todo-react:todos',
+      'todo-ia:todos',
       JSON.stringify(todos)
     );
   });

@@ -10,7 +10,7 @@ describe('shareTodos', () => {
     ];
 
     expect(formatShareText(todos)).toBe(
-      '*ToDo List React*\n\n' +
+      '*ToDo IA*\n\n' +
       '- Buy groceries\n' +
       '- Plan my week'
     );
@@ -18,7 +18,7 @@ describe('shareTodos', () => {
 
   it('conserva el título con una lista vacía', () => {
     expect(formatShareText([])).toBe(
-      '*ToDo List React*\n\n'
+      '*ToDo IA*\n\n'
     );
   });
 });

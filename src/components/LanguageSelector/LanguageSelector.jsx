@@ -3,25 +3,16 @@ import { useTranslation } from 'react-i18next';
 import { changeLanguage } from '../../i18n/i18n.js';
 import flagEn from '../../img/svg/flag-en.svg';
 import flagEs from '../../img/svg/flag-es.svg';
-import flagCa from '../../img/svg/flag-ca.svg';
-import flagGl from '../../img/svg/flag-gl.svg';
-import flagEu from '../../img/svg/flag-eu.svg';
 import styles from './LanguageSelector.module.css';
 
 const languages = [
   { code: 'en', label: 'English' },
   { code: 'es', label: 'Español' },
-  { code: 'ca', label: 'Català' },
-  { code: 'gl', label: 'Galego' },
-  { code: 'eu', label: 'Euskara' },
 ];
 
 const flagImages = {
   en: flagEn,
   es: flagEs,
-  ca: flagCa,
-  gl: flagGl,
-  eu: flagEu,
 };
 
 function Flag({ code }) {

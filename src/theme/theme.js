@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'todo-react:theme';
+const STORAGE_KEY = 'todo-ia:theme';
 const THEMES = ['light', 'dark', 'radioactive'];
 
 export function loadTheme(storage) {

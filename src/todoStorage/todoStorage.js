@@ -1,5 +1,5 @@
 
-const STORAGE_KEY = 'todo-react:todos';
+const STORAGE_KEY = 'todo-ia:todos';
 
 export function loadTodos(storage) {
   try {
