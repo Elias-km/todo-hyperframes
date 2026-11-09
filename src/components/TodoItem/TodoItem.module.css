@@ -4,7 +4,9 @@
 }
 
 .button {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   width: 100%;
   min-height: 46px;
   padding: 10px 16px;
@@ -30,4 +32,60 @@
 .button:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: -2px;
+}
+
+/* Traducción pendiente: bandera + spinner compacto */
+
+.text {
+  flex: 1;
+  min-width: 0;
+}
+
+.translationIndicator {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.translationFlag {
+  display: block;
+  width: 21px;
+  height: 15px;
+  object-fit: cover;
+  border: 1px solid rgba(127, 127, 127, 0.25);
+  border-radius: 2px;
+}
+
+.translationSparkle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  flex: 0 0 17px;
+  color: currentColor;
+  animation: translation-sparkle 1.5s ease-in-out infinite;
+}
+
+@keyframes translation-sparkle {
+  0%, 100% {
+    transform: scale(0.8) rotate(-12deg);
+    opacity: 0.45;
+  }
+
+  50% {
+    transform: scale(1.15) rotate(12deg);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .translationSparkle {
+    animation: none;
+    opacity: 1;
+  }
 }

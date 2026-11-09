@@ -84,3 +84,25 @@
   color: var(--control-color, var(--primary));
   font-weight: 600;
 }
+
+.spinner {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: language-spinner 0.8s linear infinite;
+}
+
+@keyframes language-spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2s;
+  }
+}

@@ -451,3 +451,241 @@ describe('Progreso durante generación IA', () => {
     })).toBeTruthy();
   });
 });
+
+describe('Cambio de idioma con traducción local', () => {
+  it('traduce al inglés y recupera el español original', async () => {
+    const session = {
+      prompt: vi.fn().mockResolvedValue(JSON.stringify({
+        translations: [
+          { id: '1', text: 'Buy bread' },
+          { id: '2', text: 'Walk the dog' },
+        ],
+      })),
+      destroy: vi.fn(),
+    };
+
+    const base = {
+      clone: vi.fn(),
+      destroy: vi.fn(),
+    };
+
+    const model = {
+      availability: vi.fn().mockResolvedValue('available'),
+      create: vi.fn().mockImplementation((options) => {
+        const languages = options.expectedInputs[0].languages;
+
+        return Promise.resolve(
+          languages.length === 2 ? session : base
+        );
+      }),
+    };
+
+    vi.stubGlobal('LanguageModel', model);
+
+    const user = userEvent.setup();
+
+    render(<App initialTodos={[
+      { id: '1', text: 'Comprar pan' },
+      { id: '2', text: 'Pasear al perro' },
+    ]} />);
+
+    const generateButton = screen.getByRole('button', {
+      name: 'Generar tarea con IA',
+    });
+
+    await waitFor(() => {
+      expect(generateButton.disabled).toBe(false);
+    });
+
+    await user.click(screen.getByLabelText('Idioma: Español'));
+    await user.click(screen.getByRole('button', {
+      name: 'English',
+    }));
+
+    expect(await screen.findByRole('button', {
+      name: 'Buy bread',
+    })).toBeTruthy();
+
+    expect(screen.getByRole('button', {
+      name: 'Walk the dog',
+    })).toBeTruthy();
+
+    const saved = loadTodos();
+
+    expect(saved[0].text).toBe('Comprar pan');
+    expect(saved[0].translations.en).toBe('Buy bread');
+    expect(saved[0].originalLanguage).toBe('es');
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', {
+        name: 'Generate task with AI',
+      }).disabled).toBe(false);
+    });
+
+    await user.click(screen.getByLabelText('Language: English'));
+    await user.click(screen.getByRole('button', {
+      name: 'Español',
+    }));
+
+    expect(await screen.findByRole('button', {
+      name: 'Comprar pan',
+    })).toBeTruthy();
+
+    // Regresar al original no necesita otra inferencia.
+    expect(session.prompt).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('Interfaz independiente de la IA', () => {
+  it('cambia inmediatamente a inglés aunque no exista el modelo', async () => {
+    const { changeLanguage } = await import(
+      '../../src/i18n/i18n.js'
+    );
+
+    await changeLanguage('es');
+
+    vi.stubGlobal('LanguageModel', undefined);
+
+    try {
+      const user = setup();
+
+      await user.click(screen.getByLabelText('Idioma: Español'));
+      await user.click(screen.getByRole('button', {
+        name: 'English',
+      }));
+
+      expect(await screen.findByLabelText(
+        'Language: English'
+      )).toBeTruthy();
+
+      // La lista no desaparece ni se pierde.
+      expect(screen.getByRole('button', {
+        name: 'Plan my week',
+      })).toBeTruthy();
+
+      // Los demás controles siguen disponibles.
+      expect(screen.getByRole('button', {
+        name: 'ADD',
+      }).disabled).toBe(false);
+
+      expect(await screen.findByText(
+        /Tasks could not be translated/i
+      )).toBeTruthy();
+    } finally {
+      await changeLanguage('es');
+    }
+  });
+});
+
+describe('Generación durante una traducción', () => {
+  it('espera a la traducción y guarda la nueva tarea en el idioma correcto', async () => {
+    const { changeLanguage } = await import(
+      '../../src/i18n/i18n.js'
+    );
+
+    await changeLanguage('es');
+
+    let finishTranslation;
+
+    const translationPrompt = vi.fn(() => new Promise((resolve) => {
+      finishTranslation = resolve;
+    }));
+
+    const generationPrompt = vi.fn().mockResolvedValue(
+      JSON.stringify({ text: 'Walk the dog' })
+    );
+
+    const model = {
+      availability: vi.fn().mockResolvedValue('available'),
+      create: vi.fn().mockImplementation(async (options) => {
+        const languages = options.expectedInputs[0].languages;
+
+        if (languages.length === 2) {
+          return {
+            prompt: translationPrompt,
+            destroy: vi.fn(),
+          };
+        }
+
+        return {
+          clone: vi.fn().mockResolvedValue({
+            prompt: generationPrompt,
+            destroy: vi.fn(),
+          }),
+          destroy: vi.fn(),
+        };
+      }),
+    };
+
+    vi.stubGlobal('LanguageModel', model);
+
+    try {
+      const user = userEvent.setup();
+
+      render(<App initialTodos={[
+        {
+          id: '1',
+          text: 'Comprar pan',
+          originalLanguage: 'es',
+        },
+      ]} />);
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', {
+          name: 'Generar tarea con IA',
+        }).disabled).toBe(false);
+      });
+
+      await user.click(screen.getByLabelText('Idioma: Español'));
+      await user.click(screen.getByRole('button', {
+        name: 'English',
+      }));
+
+      await waitFor(() => {
+        expect(translationPrompt).toHaveBeenCalledOnce();
+      });
+
+      const button = screen.getByRole('button', {
+        name: 'Generate task with AI',
+      });
+
+      await waitFor(() => {
+        expect(button.disabled).toBe(false);
+      });
+
+      await user.click(button);
+
+      // La generación queda esperando su turno.
+      expect(generationPrompt).not.toHaveBeenCalled();
+
+      finishTranslation(JSON.stringify({
+        translations: [{
+          id: '1',
+          text: 'Buy bread',
+        }],
+      }));
+
+      expect(await screen.findByRole('button', {
+        name: 'Walk the dog',
+      })).toBeTruthy();
+
+      const generated = loadTodos().find(
+        (todo) => todo.text === 'Walk the dog'
+      );
+
+      expect(generated.originalLanguage).toBe('en');
+
+      expect(screen.getByRole('button', {
+        name: 'Buy bread',
+      })).toBeTruthy();
+    } finally {
+      if (finishTranslation) {
+        finishTranslation(JSON.stringify({
+          translations: [{ id: '1', text: 'Buy bread' }],
+        }));
+      }
+
+      await changeLanguage('es');
+    }
+  });
+});

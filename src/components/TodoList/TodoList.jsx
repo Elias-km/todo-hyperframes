@@ -8,17 +8,35 @@ export default function TodoList({
   selectedIds,
   onToggle,
   onRemove,
+  translating = false,
+  pendingTranslationIds = new Set(),
+  targetLanguage = 'es',
+  translationError = false,
 }) {
   const { t } = useTranslation();
 
   return (
     <section className={styles.container}>
-      <ul ref={listRef} className={styles.list} aria-label={t('listLabel')}>
+      <ul
+        ref={listRef}
+        className={styles.list}
+        aria-label={t('listLabel')}
+        aria-busy={translating}
+      >
+
+        {translationError && !translating && (
+          <li className={styles.translationError} role="status">
+            {t('translationUnavailable')}
+          </li>
+        )}
+
         {todos.map((todo) => (
           <TodoItem
             key={todo.id}
             todo={todo}
             selected={selectedIds.has(todo.id)}
+            translating={translating && pendingTranslationIds.has(todo.id)}
+            targetLanguage={targetLanguage}
             onToggle={onToggle}
             onRemove={onRemove}
           />

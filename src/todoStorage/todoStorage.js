@@ -26,7 +26,39 @@ export function loadTodos(storage) {
         ids.add(todo.id);
         return true;
       })
-      .map(({ id, text }) => ({ id, text }));
+      .map(({ id, text, originalLanguage, translations }) => {
+        const todo = { id, text };
+
+        if (originalLanguage === 'es' || originalLanguage === 'en') {
+          todo.originalLanguage = originalLanguage;
+        }
+
+        if (
+          translations &&
+          typeof translations === 'object' &&
+          !Array.isArray(translations)
+        ) {
+          const validTranslations = {};
+
+          for (const language of ['es', 'en']) {
+            const value = translations[language];
+
+            if (
+              typeof value === 'string' &&
+              value.trim() &&
+              value.length <= 500
+            ) {
+              validTranslations[language] = value;
+            }
+          }
+
+          if (Object.keys(validTranslations).length) {
+            todo.translations = validTranslations;
+          }
+        }
+
+        return todo;
+      });
   } catch {
     return [];
   }

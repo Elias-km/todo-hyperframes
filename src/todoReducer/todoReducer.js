@@ -1,3 +1,45 @@
+function applyCachedTranslations(todos, action) {
+  let changed = false;
+
+  const result = todos.map((todo) => {
+    const originalLanguage =
+      todo.originalLanguage || action.sourceLanguage;
+
+    const entry = Object.hasOwn(
+      action.translations,
+      todo.id
+    ) ? action.translations[todo.id] : null;
+
+    const validEntry =
+      entry &&
+      entry.sourceText === todo.text &&
+      typeof entry.text === 'string' &&
+      entry.text.trim();
+
+    const needsLanguage = !todo.originalLanguage;
+    const needsTranslation =
+      validEntry &&
+      todo.translations?.[action.targetLanguage] !== entry.text;
+
+    if (!needsLanguage && !needsTranslation) return todo;
+
+    changed = true;
+
+    return {
+      ...todo,
+      originalLanguage,
+      ...(needsTranslation ? {
+        translations: {
+          ...todo.translations,
+          [action.targetLanguage]: entry.text,
+        },
+      } : {}),
+    };
+  });
+
+  return changed ? result : todos;
+}
+
 export function createInitialState(todos = []) {
   return {
     todos,
@@ -27,8 +69,65 @@ export function todoReducer(state, action) {
 
       return saveHistory(state, [
         ...state.todos,
-        { id: action.id, text },
+        {
+          id: action.id,
+          text,
+          ...(action.language === 'es' || action.language === 'en'
+            ? { originalLanguage: action.language }
+            : {}),
+        },
       ]);
+    }
+
+    case 'tagOriginalLanguage': {
+      if (!['es', 'en'].includes(action.language)) {
+        return state;
+      }
+
+      const tag = (todos) => {
+        let changed = false;
+
+        const result = todos.map((todo) => {
+          if (todo.originalLanguage) return todo;
+
+          changed = true;
+          return {
+            ...todo,
+            originalLanguage: action.language,
+          };
+        });
+
+        return changed ? result : todos;
+      };
+
+      return {
+        ...state,
+        todos: tag(state.todos),
+        history: state.history.map(tag),
+        future: state.future.map(tag),
+      };
+    }
+
+    case 'cacheTranslations': {
+      if (
+        !['es', 'en'].includes(action.sourceLanguage) ||
+        !['es', 'en'].includes(action.targetLanguage) ||
+        !action.translations ||
+        typeof action.translations !== 'object'
+      ) {
+        return state;
+      }
+
+      return {
+        ...state,
+        todos: applyCachedTranslations(state.todos, action),
+        history: state.history.map((snapshot) =>
+          applyCachedTranslations(snapshot, action)
+        ),
+        future: state.future.map((snapshot) =>
+          applyCachedTranslations(snapshot, action)
+        ),
+      };
     }
 
     case 'toggle': {

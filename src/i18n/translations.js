@@ -45,7 +45,9 @@ export const resources = {
       "aiGenerateFailed": "No se ha podido generar la tarea. Inténtalo de nuevo.",
       "aiLocalNote": "La IA de ToDo IA se ejecuta localmente en tu dispositivo. Tus tareas no se envían a servidores externos de IA. La descarga inicial del modelo puede requerir conexión a Internet.",
       "aiModelPreparing": "Preparando el modelo de IA local.",
-      "aiModelReady": "Modelo de IA local preparado."
+      "aiModelReady": "Modelo de IA local preparado.",
+      "translatingTodos": "Traduciendo tareas...",
+      "translationUnavailable": "No se han podido traducir las tareas. Se conservan los textos originales."
     }
   },
   "en": {
@@ -93,7 +95,9 @@ export const resources = {
       "aiGenerateFailed": "Unable to generate the task. Please try again.",
       "aiLocalNote": "ToDo IA runs artificial intelligence locally on your device. Your tasks are not sent to external AI servers. The initial model download may require an Internet connection.",
       "aiModelPreparing": "Preparing the local AI model.",
-      "aiModelReady": "Local AI model ready."
+      "aiModelReady": "Local AI model ready.",
+      "translatingTodos": "Translating tasks...",
+      "translationUnavailable": "Tasks could not be translated. Original texts are preserved."
     }
   }
 };

@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { changeLanguage } from '../../i18n/i18n.js';
 import flagEn from '../../img/svg/flag-en.svg';
 import flagEs from '../../img/svg/flag-es.svg';
 import styles from './LanguageSelector.module.css';
@@ -26,7 +25,9 @@ function Flag({ code }) {
   );
 }
 
-export default function LanguageSelector({ canChangeLanguage = true }) {
+export default function LanguageSelector({
+  onChangeLanguage = () => {},
+}) {
   const { t, i18n } = useTranslation();
   const detailsRef = useRef(null);
 
@@ -52,7 +53,7 @@ export default function LanguageSelector({ canChangeLanguage = true }) {
 
   function selectLanguage(code) {
     detailsRef.current.open = false;
-    if (canChangeLanguage) void changeLanguage(code);
+    if (code !== language) void onChangeLanguage(code);
   }
 
   return (

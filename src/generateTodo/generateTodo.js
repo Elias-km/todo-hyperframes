@@ -1,5 +1,7 @@
 import i18n from '../i18n/i18n.js';
 import { createTaskSession } from '../aiService/aiService.js';
+import { runAiExclusive } from '../aiService/aiQueue.js';
+import { isConfidentlyWrongLanguage } from '../aiService/verifyTaskLanguage.js';
 import { examples } from './examples.js';
 
 const LANGUAGE_INDEX = {
@@ -45,28 +47,45 @@ export async function generateTodo({
     existing: JSON.stringify(existing),
   });
 
-  const session = await createTaskSession(language, model);
+  return runAiExclusive(async () => {
+    const session = await createTaskSession(language, model);
 
-  try {
-    const result = await session.prompt(prompt, {
-      responseConstraint: schema,
-    });
+    try {
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const instructions = attempt === 0
+          ? prompt
+          : `${prompt}\n\n${language === 'en'
+            ? 'Your previous response was in the wrong language. Write the new task ONLY in English.'
+            : 'La respuesta anterior estaba en otro idioma. Escribe la nueva tarea SOLO en español.'}`;
 
-    const text = JSON.parse(result).text?.trim();
+        const result = await session.prompt(instructions, {
+          responseConstraint: schema,
+        });
 
-    if (!text || text.length > 120) {
-      throw new Error('Invalid generated task');
+        const text = JSON.parse(result).text?.trim();
+
+        if (!text || text.length > 120) {
+          throw new Error('Invalid generated task');
+        }
+
+        if (existing.some((item) =>
+          item.toLocaleLowerCase(language) ===
+          text.toLocaleLowerCase(language)
+        )) {
+          throw new Error('Duplicate generated task');
+        }
+
+        if (await isConfidentlyWrongLanguage(text, language)) {
+          if (attempt === 0) continue;
+          throw new Error('Wrong generated language');
+        }
+
+        return text;
+      }
+
+      throw new Error('Wrong generated language');
+    } finally {
+      session.destroy();
     }
-
-    if (existing.some((item) =>
-      item.toLocaleLowerCase(language) ===
-      text.toLocaleLowerCase(language)
-    )) {
-      throw new Error('Duplicate generated task');
-    }
-
-    return text;
-  } finally {
-    session.destroy();
-  }
+  });
 }

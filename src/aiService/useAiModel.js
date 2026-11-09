@@ -16,6 +16,7 @@ export default function useAiModel(language) {
   const [generationSlow, setGenerationSlow] = useState(false);
 
   const slowTimerRef = useRef(null);
+  const initialCheckDoneRef = useRef(false);
 
   // Comprobar disponibilidad y precargar el modelo.
   useEffect(() => {
@@ -24,11 +25,14 @@ export default function useAiModel(language) {
     getPromptAvailability(language).then(async (availability) => {
       if (!active) return;
 
+      const initialCheck = !initialCheckDoneRef.current;
+      initialCheckDoneRef.current = true;
+
       setStatus(availability);
       setReady(false);
 
       if (availability !== 'available') {
-        setDialogOpen(true);
+        if (initialCheck) setDialogOpen(true);
         return;
       }
 
@@ -38,7 +42,7 @@ export default function useAiModel(language) {
       } catch {
         if (!active) return;
         setStatus('error');
-        setDialogOpen(true);
+        if (initialCheck) setDialogOpen(true);
       }
     });
 

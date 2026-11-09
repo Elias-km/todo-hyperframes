@@ -110,3 +110,47 @@ describe('Prompts internacionalizados', () => {
     expect(instructions).not.toContain('{{existing}}');
   });
 });
+
+describe('Corrección del idioma generado', () => {
+  it('reintenta cuando detecta español en una tarea inglesa', async () => {
+    const prompt = vi.fn()
+      .mockResolvedValueOnce(JSON.stringify({
+        text: 'Limpiar el coche',
+      }))
+      .mockResolvedValueOnce(JSON.stringify({
+        text: 'Clean the car',
+      }));
+
+    const model = {
+      create: vi.fn().mockResolvedValue({
+        prompt,
+        destroy: vi.fn(),
+      }),
+    };
+
+    vi.stubGlobal('LanguageDetector', {
+      availability: vi.fn().mockResolvedValue('available'),
+      create: vi.fn().mockResolvedValue({
+        detect: vi.fn(async (text) => [{
+          detectedLanguage: text === 'Limpiar el coche'
+            ? 'es'
+            : 'en',
+          confidence: 0.99,
+        }]),
+        destroy: vi.fn(),
+      }),
+    });
+
+    try {
+      const result = await generateTodo({
+        language: 'en',
+        model,
+      });
+
+      expect(result).toBe('Clean the car');
+      expect(prompt).toHaveBeenCalledTimes(2);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+});

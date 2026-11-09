@@ -6,6 +6,7 @@ import LanguageSelector from './components/LanguageSelector/LanguageSelector.jsx
 import AiSetupDialog from './components/AiSetupDialog/AiSetupDialog.jsx';
 import useAiModel from './aiService/useAiModel.js';
 import AiGenerateButton from './components/AiGenerateButton/AiGenerateButton.jsx';
+import useTodoTranslation from './translateTodos/useTodoTranslation.js';
 import TodoForm from './components/TodoForm/TodoForm.jsx';
 import TodoList from './components/TodoList/TodoList.jsx';
 import {
@@ -32,9 +33,22 @@ export default function App({ initialTodos }) {
   const [theme, setTheme] = useState(loadTheme);
   const [shareFeedback, setShareFeedback] = useState('');
 
-  const ai = useAiModel(
-    i18n.resolvedLanguage || i18n.language
-  );
+  const language = i18n.resolvedLanguage || i18n.language;
+  const ai = useAiModel(language);
+
+  const {
+    displayTodos,
+    translating,
+    pendingTranslationIds,
+    translationError,
+    requestLanguageChange,
+  } = useTodoTranslation({
+    todos: state.todos,
+    language,
+    aiReady: ai.ready,
+    aiStatus: ai.status,
+    dispatch,
+  });
   useEffect(() => {
     saveTodos(state.todos);
   }, [state.todos]);
@@ -74,13 +88,14 @@ export default function App({ initialTodos }) {
       type: 'add',
       id: crypto.randomUUID(),
       text,
+      language,
     });
   }
 
   async function handleShare() {
     setShareFeedback('');
 
-    const result = await shareTodos(state.todos);
+    const result = await shareTodos(displayTodos);
 
     if (result === 'copied') {
       setShareFeedback('copied');
@@ -164,10 +179,7 @@ export default function App({ initialTodos }) {
             )}
           </button>
           <LanguageSelector
-            canChangeLanguage={
-              ai.status === 'available' &&
-              state.todos.length === 0
-            }
+            onChangeLanguage={requestLanguageChange}
           />
         </div>
 
@@ -199,7 +211,11 @@ export default function App({ initialTodos }) {
 
         <TodoList
           listRef={listRef}
-          todos={state.todos}
+          todos={displayTodos}
+          translating={translating}
+          pendingTranslationIds={pendingTranslationIds}
+          targetLanguage={language}
+          translationError={translationError}
           selectedIds={state.selectedIds}
           onToggle={(id) => handleAction({ type: 'toggle', id })}
           onRemove={(id) => handleAction({ type: 'remove', id })}
@@ -273,8 +289,8 @@ export default function App({ initialTodos }) {
         )}
         <AiGenerateButton
           ai={ai}
-          todos={state.todos}
-          language={i18n.resolvedLanguage || i18n.language}
+          todos={displayTodos}
+          language={language}
           onAdd={addTodo}
         />
 

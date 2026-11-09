@@ -78,3 +78,100 @@ describe('todoReducer', () => {
     expect(changed.future).toEqual([]);
   });
 });
+
+describe('Traducciones y Undo/Redo', () => {
+  it('guarda traducciones sin sobrescribir el original ni crear historial', () => {
+    const initial = createInitialState([
+      { id: '1', text: 'Comprar pan' },
+    ]);
+
+    const result = todoReducer(initial, {
+      type: 'cacheTranslations',
+      sourceLanguage: 'es',
+      targetLanguage: 'en',
+      translations: {
+        1: {
+          sourceText: 'Comprar pan',
+          text: 'Buy bread',
+        },
+      },
+    });
+
+    expect(result.todos[0]).toEqual({
+      id: '1',
+      text: 'Comprar pan',
+      originalLanguage: 'es',
+      translations: { en: 'Buy bread' },
+    });
+
+    expect(result.history).toHaveLength(0);
+  });
+
+  it('conserva traducciones después de deshacer y rehacer', () => {
+    let state = createInitialState();
+
+    state = todoReducer(state, {
+      type: 'add', id: '1', text: 'Comprar pan', language: 'es',
+    });
+
+    state = todoReducer(state, {
+      type: 'add', id: '2', text: 'Pasear al perro', language: 'es',
+    });
+
+    state = todoReducer(state, {
+      type: 'cacheTranslations',
+      sourceLanguage: 'es',
+      targetLanguage: 'en',
+      translations: {
+        1: { sourceText: 'Comprar pan', text: 'Buy bread' },
+        2: { sourceText: 'Pasear al perro', text: 'Walk the dog' },
+      },
+    });
+
+    state = todoReducer(state, { type: 'undo' });
+
+    expect(state.todos[0].translations.en).toBe('Buy bread');
+
+    state = todoReducer(state, { type: 'redo' });
+
+    expect(state.todos[1].translations.en).toBe('Walk the dog');
+  });
+});
+
+describe('Migración del idioma original', () => {
+  it('identifica tareas antiguas antes de cambiar de idioma', () => {
+    const initial = createInitialState([
+      { id: '1', text: 'Comprar pan' },
+    ]);
+
+    const result = todoReducer(initial, {
+      type: 'tagOriginalLanguage',
+      language: 'es',
+    });
+
+    expect(result.todos[0]).toEqual({
+      id: '1',
+      text: 'Comprar pan',
+      originalLanguage: 'es',
+    });
+
+    expect(result.history).toHaveLength(0);
+  });
+
+  it('no modifica el idioma original de una tarea existente', () => {
+    const initial = createInitialState([
+      {
+        id: '1',
+        text: 'Buy bread',
+        originalLanguage: 'en',
+      },
+    ]);
+
+    const result = todoReducer(initial, {
+      type: 'tagOriginalLanguage',
+      language: 'es',
+    });
+
+    expect(result.todos[0].originalLanguage).toBe('en');
+  });
+});

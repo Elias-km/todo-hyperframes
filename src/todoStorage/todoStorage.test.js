@@ -72,3 +72,20 @@ describe('todoStorage', () => {
     expect(saveTodos([], storage)).toBe(false);
   });
 });
+
+describe('Persistencia de traducciones', () => {
+  it('recupera las traducciones sin modificar el texto original', () => {
+    const todo = {
+      id: '1',
+      text: 'Comprar pan',
+      originalLanguage: 'es',
+      translations: {
+        en: 'Buy bread',
+      },
+    };
+
+    const storage = createStorage(JSON.stringify([todo]));
+
+    expect(loadTodos(storage)).toEqual([todo]);
+  });
+});
