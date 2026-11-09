@@ -4,9 +4,9 @@ const THEMES = ['light', 'dark', 'radioactive'];
 export function loadTheme(storage) {
   try {
     const theme = (storage ?? localStorage).getItem(STORAGE_KEY);
-    return THEMES.includes(theme) ? theme : 'radioactive';
+    return THEMES.includes(theme) ? theme : 'light';
   } catch {
-    return 'radioactive';
+    return 'light';
   }
 }
 

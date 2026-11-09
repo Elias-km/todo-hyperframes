@@ -2,8 +2,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { loadTheme, saveTheme } from './theme.js';
 
 describe('theme', () => {
-  it('utiliza el tema radioactivo por defecto', () => {
-    expect(loadTheme({ getItem: () => null })).toBe('radioactive');
+  it('utiliza el tema claro por defecto', () => {
+    expect(loadTheme({ getItem: () => null })).toBe('light');
   });
 
   it('recupera el tema oscuro', () => {
@@ -16,7 +16,7 @@ describe('theme', () => {
   });
 
   it('descarta temas desconocidos', () => {
-    expect(loadTheme({ getItem: () => 'unknown' })).toBe('radioactive');
+    expect(loadTheme({ getItem: () => 'unknown' })).toBe('light');
   });
 
   it('persiste correctamente el tema', () => {

@@ -161,10 +161,6 @@ describe('Theme - integración', () => {
     const user = setup();
 
     await user.click(screen.getByRole('button', {
-      name: 'Switch to light theme',
-    }));
-
-    await user.click(screen.getByRole('button', {
       name: 'Switch to dark theme',
     }));
 
