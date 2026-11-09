@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './i18n/i18n.js';
+import Icon from './components/Icon/Icon.jsx';
 import LanguageSelector from './components/LanguageSelector/LanguageSelector.jsx';
 import TodoForm from './components/TodoForm/TodoForm.jsx';
 import TodoList from './components/TodoList/TodoList.jsx';
@@ -126,21 +127,11 @@ export default function App({ initialTodos }) {
             }}
           >
             {theme === 'light' ? (
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M20.9 13.4A9 9 0 0 1 10.6 3.1 9 9 0 1 0 20.9 13.4Z" />
-              </svg>
+              <Icon name="moon" size={21} />
             ) : theme === 'dark' ? (
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 2c-5 0-9 4-9 9 0 3 1.5 5.1 4 6.5V21h10v-3.5c2.5-1.4 4-3.5 4-6.5 0-5-4-9-9-9Z" />
-                <circle cx="9" cy="12" r="1.2" fill="currentColor" stroke="none" />
-                <circle cx="15" cy="12" r="1.2" fill="currentColor" stroke="none" />
-                <path d="M10 21v-3M14 21v-3" />
-              </svg>
+              <Icon name="skull" size={21} />
             ) : (
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <circle cx="12" cy="12" r="4" />
-                <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42" />
-              </svg>
+              <Icon name="sun" size={21} />
             )}
           </button>
           <LanguageSelector />
@@ -194,10 +185,7 @@ export default function App({ initialTodos }) {
               disabled={state.history.length === 0}
               onClick={() => handleAction({ type: 'undo' })}
             >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M10 7L6 11L10 15" />
-                <path d="M6 11H13C16.866 11 20 14.134 20 18" />
-              </svg>
+              <Icon name="undo" />
             </button>
 
             <button
@@ -208,10 +196,7 @@ export default function App({ initialTodos }) {
               disabled={state.future.length === 0}
               onClick={() => handleAction({ type: 'redo' })}
             >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M14 7L18 11L14 15" />
-                <path d="M18 11H11C7.134 11 4 14.134 4 18" />
-              </svg>
+              <Icon name="redo" />
             </button>
 
             <button
@@ -233,13 +218,7 @@ export default function App({ initialTodos }) {
               disabled={state.todos.length === 0}
               onClick={handleShare}
             >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <circle cx="18" cy="5" r="2" />
-                <circle cx="6" cy="12" r="2" />
-                <circle cx="18" cy="19" r="2" />
-                <path d="M8 12L16 6.5" />
-                <path d="M8 12L16 17.5" />
-              </svg>
+              <Icon name="share" />
             </button>
 
             <button

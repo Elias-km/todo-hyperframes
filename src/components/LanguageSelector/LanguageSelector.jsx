@@ -1,6 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { changeLanguage } from '../../i18n/i18n.js';
+import flagEn from '../../img/svg/flag-en.svg';
+import flagEs from '../../img/svg/flag-es.svg';
+import flagCa from '../../img/svg/flag-ca.svg';
+import flagGl from '../../img/svg/flag-gl.svg';
+import flagEu from '../../img/svg/flag-eu.svg';
 import styles from './LanguageSelector.module.css';
 
 const languages = [
@@ -11,62 +16,22 @@ const languages = [
   { code: 'eu', label: 'Euskara' },
 ];
 
+const flagImages = {
+  en: flagEn,
+  es: flagEs,
+  ca: flagCa,
+  gl: flagGl,
+  eu: flagEu,
+};
+
 function Flag({ code }) {
-  if (code === 'en' || code === 'es') {
-    return (
-      <span className={styles.emojiFlag} aria-hidden="true">
-        {code === 'en' ? '🇬🇧' : '🇪🇸'}
-      </span>
-    );
-  }
-
   return (
-    <svg
-      viewBox="0 0 32 22"
+    <img
+      src={flagImages[code]}
       className={styles.flag}
+      alt=""
       aria-hidden="true"
-    >
-      {code === 'ca' && (
-        <>
-          <rect width="32" height="22" fill="#ffdb00" />
-          {[4, 9, 14, 19].map((y) => (
-            <rect
-              key={y}
-              y={y}
-              width="32"
-              height="2"
-              fill="#d71920"
-            />
-          ))}
-        </>
-      )}
-
-      {code === 'gl' && (
-        <>
-          <rect width="32" height="22" fill="#ffffff" />
-          <path
-            d="M0 0H6L32 17V22H26L0 5Z"
-            fill="#5ba4d6"
-          />
-        </>
-      )}
-
-      {code === 'eu' && (
-        <>
-          <rect width="32" height="22" fill="#d51d28" />
-          <path
-            d="M0 0L32 22M32 0L0 22"
-            stroke="#168143"
-            strokeWidth="5"
-          />
-          <path
-            d="M16 0V22M0 11H32"
-            stroke="#ffffff"
-            strokeWidth="3.5"
-          />
-        </>
-      )}
-    </svg>
+    />
   );
 }
 

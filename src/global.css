@@ -128,18 +128,6 @@ input:focus-visible {
   color: var(--primary);
 }
 
-.icon-button svg {
-  width: 24px;
-  height: 24px;
-  display: block;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  overflow: visible;
-  vector-effect: non-scaling-stroke;
-}
 
 .ghost-button {
   min-width: 140px;
@@ -340,15 +328,6 @@ input:focus-visible {
   background: var(--hover-color, rgba(53, 71, 255, 0.08));
 }
 
-.theme-toggle svg {
-  width: 21px;
-  height: 21px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
 
 @media (max-width: 480px) {
   .card {
