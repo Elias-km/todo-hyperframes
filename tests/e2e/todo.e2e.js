@@ -1,5 +1,25 @@
 import { test, expect } from '@playwright/test';
 
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(window, 'LanguageModel', {
+      configurable: true,
+      value: {
+        availability: async () => 'available',
+        create: async () => ({
+          clone: async () => ({
+            prompt: async () => JSON.stringify({
+              text: 'Tarea generada',
+            }),
+            destroy: () => {},
+          }),
+          destroy: () => {},
+        }),
+      },
+    });
+  });
+});
+
 test('starts empty and persists new tasks', async ({ page }) => {
   await page.goto('./');
 

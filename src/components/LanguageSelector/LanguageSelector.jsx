@@ -26,7 +26,7 @@ function Flag({ code }) {
   );
 }
 
-export default function LanguageSelector() {
+export default function LanguageSelector({ canChangeLanguage = true }) {
   const { t, i18n } = useTranslation();
   const detailsRef = useRef(null);
 
@@ -52,7 +52,7 @@ export default function LanguageSelector() {
 
   function selectLanguage(code) {
     detailsRef.current.open = false;
-    void changeLanguage(code);
+    if (canChangeLanguage) void changeLanguage(code);
   }
 
   return (

@@ -3,6 +3,7 @@ import TodoItem from '../TodoItem/TodoItem.jsx';
 import styles from './TodoList.module.css';
 
 export default function TodoList({
+  listRef,
   todos,
   selectedIds,
   onToggle,
@@ -12,7 +13,7 @@ export default function TodoList({
 
   return (
     <section className={styles.container}>
-      <ul className={styles.list} aria-label={t('listLabel')}>
+      <ul ref={listRef} className={styles.list} aria-label={t('listLabel')}>
         {todos.map((todo) => (
           <TodoItem
             key={todo.id}

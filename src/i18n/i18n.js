@@ -1,6 +1,7 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { resources } from './translations.js';
+import { promptResources } from './prompts/index.js';
 
 const STORAGE_KEY = 'todo-ia:language';
 const supportedLanguages = ['es', 'en'];
@@ -16,10 +17,17 @@ function loadLanguage() {
 
 const initialLanguage = loadLanguage();
 
-document.documentElement.lang = initialLanguage;
+if (typeof document !== 'undefined') {
+  document.documentElement.lang = initialLanguage;
+}
 
 i18n.use(initReactI18next).init({
-  resources,
+  resources: {
+    es: { ...resources.es, prompts: promptResources.es },
+    en: { ...resources.en, prompts: promptResources.en },
+  },
+  ns: ['translation', 'prompts'],
+  defaultNS: 'translation',
   lng: initialLanguage,
   fallbackLng: 'es',
   supportedLngs: supportedLanguages,
@@ -33,7 +41,9 @@ export async function changeLanguage(language) {
 
   await i18n.changeLanguage(language);
 
-  document.documentElement.lang = language;
+  if (typeof document !== 'undefined') {
+    document.documentElement.lang = language;
+  }
 
   try {
     localStorage.setItem(STORAGE_KEY, language);

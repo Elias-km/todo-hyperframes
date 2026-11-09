@@ -1,8 +1,11 @@
-import { useEffect, useLayoutEffect, useReducer, useState } from 'react';
+import { useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './i18n/i18n.js';
 import Icon from './components/Icon/Icon.jsx';
 import LanguageSelector from './components/LanguageSelector/LanguageSelector.jsx';
+import AiSetupDialog from './components/AiSetupDialog/AiSetupDialog.jsx';
+import useAiModel from './aiService/useAiModel.js';
+import AiGenerateButton from './components/AiGenerateButton/AiGenerateButton.jsx';
 import TodoForm from './components/TodoForm/TodoForm.jsx';
 import TodoList from './components/TodoList/TodoList.jsx';
 import {
@@ -14,20 +17,44 @@ import { shareTodos } from './shareTodos/shareTodos.js';
 import { loadTheme, saveTheme } from "./theme/theme.js";
 
 export default function App({ initialTodos }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [state, dispatch] = useReducer(
     todoReducer,
     initialTodos,
     createInitialState
   );
 
+  const listRef = useRef(null);
+  const scrollAfterAddRef = useRef(false);
+
   const [formOpen, setFormOpen] = useState(false);
   const [ripples, setRipples] = useState([]);
   const [theme, setTheme] = useState(loadTheme);
   const [shareFeedback, setShareFeedback] = useState('');
 
+  const ai = useAiModel(
+    i18n.resolvedLanguage || i18n.language
+  );
   useEffect(() => {
     saveTodos(state.todos);
+  }, [state.todos]);
+
+  useLayoutEffect(() => {
+    if (!scrollAfterAddRef.current) return;
+
+    scrollAfterAddRef.current = false;
+
+    const lastTodo = listRef.current?.lastElementChild;
+    if (!lastTodo?.scrollIntoView) return;
+
+    const reducedMotion = window.matchMedia?.(
+      '(prefers-reduced-motion: reduce)'
+    )?.matches;
+
+    lastTodo.scrollIntoView({
+      behavior: reducedMotion ? 'auto' : 'smooth',
+      block: 'nearest',
+    });
   }, [state.todos]);
 
   useLayoutEffect(() => {
@@ -41,6 +68,8 @@ export default function App({ initialTodos }) {
   }
 
   function addTodo(text) {
+    scrollAfterAddRef.current = true;
+
     handleAction({
       type: 'add',
       id: crypto.randomUUID(),
@@ -134,7 +163,12 @@ export default function App({ initialTodos }) {
               <Icon name="sun" size={21} />
             )}
           </button>
-          <LanguageSelector />
+          <LanguageSelector
+            canChangeLanguage={
+              ai.status === 'available' &&
+              state.todos.length === 0
+            }
+          />
         </div>
 
         {theme === 'radioactive' && (
@@ -164,6 +198,7 @@ export default function App({ initialTodos }) {
         <p className="description">{t('description')}</p>
 
         <TodoList
+          listRef={listRef}
           todos={state.todos}
           selectedIds={state.selectedIds}
           onToggle={(id) => handleAction({ type: 'toggle', id })}
@@ -236,7 +271,16 @@ export default function App({ initialTodos }) {
             {t(shareFeedback)}
           </p>
         )}
+        <AiGenerateButton
+          ai={ai}
+          todos={state.todos}
+          language={i18n.resolvedLanguage || i18n.language}
+          onAdd={addTodo}
+        />
+
       </section>
+
+      <AiSetupDialog {...ai.dialogProps} />
 
       <TodoForm
         open={formOpen}

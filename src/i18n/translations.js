@@ -1,7 +1,7 @@
 export const resources = {
   "es": {
     "translation": {
-      "description": "Organiza tus tareas con una aplicación sencilla y ligera. Añade y elimina elementos, selecciona varias tareas, deshaz y rehace cambios y guarda automáticamente tu lista en el navegador.",
+      "description": "Organiza tus tareas y genera nuevas ideas con inteligencia artificial.",
       "listLabel": "Lista de tareas",
       "empty": "Todavía no hay elementos.",
       "add": "AÑADIR",
@@ -21,12 +21,36 @@ export const resources = {
       "language": "Idioma",
       "themeLight": "Cambiar al tema claro",
       "themeDark": "Cambiar al tema oscuro",
-      "themeRadioactive": "Cambiar al tema radioactivo"
+      "themeRadioactive": "Cambiar al tema radioactivo",
+      "aiCheckingTitle": "Comprobando IA",
+      "aiCheckingDescription": "Comprobando si tu navegador admite inteligencia artificial local.",
+      "aiReadyTitle": "IA preparada",
+      "aiReadyDescription": "El modelo está preparado para utilizar las funciones inteligentes.",
+      "aiDownloadTitle": "Preparar inteligencia artificial",
+      "aiDownloadDescription": "Tu navegador es compatible. Descarga el modelo para activar las funciones inteligentes.",
+      "aiDownloadingDescription": "El navegador está descargando el modelo. Puedes seguir el progreso aquí.",
+      "aiUnavailableTitle": "Funciones de IA no disponibles",
+      "aiUnavailableDescription": "Tu navegador o dispositivo no admite el modelo necesario. Puedes continuar utilizando normalmente la lista de tareas.",
+      "aiErrorTitle": "Error al comprobar la IA",
+      "aiErrorDescription": "No se ha podido comprobar la disponibilidad del modelo.",
+      "aiDownloading": "Preparando el modelo...",
+      "aiProgress": "Progreso de descarga",
+      "aiDownload": "Descargar modelo IA",
+      "aiContinueDownload": "Continuar descarga",
+      "aiDownloadFailed": "No se ha podido preparar el modelo. Puedes intentarlo de nuevo.",
+      "aiRetry": "Reintentar",
+      "aiClose": "Cerrar",
+      "aiGenerate": "Generar tarea con IA",
+      "aiGenerating": "GENERANDO...",
+      "aiGenerateFailed": "No se ha podido generar la tarea. Inténtalo de nuevo.",
+      "aiLocalNote": "La IA de ToDo IA se ejecuta localmente en tu dispositivo. Tus tareas no se envían a servidores externos de IA. La descarga inicial del modelo puede requerir conexión a Internet.",
+      "aiModelPreparing": "Preparando el modelo de IA local.",
+      "aiModelReady": "Modelo de IA local preparado."
     }
   },
   "en": {
     "translation": {
-      "description": "Organize your tasks with a simple, lightweight app. Add and remove items, select multiple tasks, undo and redo changes, and keep your list automatically saved in your browser.",
+      "description": "Organize your tasks and generate new ideas with artificial intelligence.",
       "listLabel": "Task list",
       "empty": "No items yet.",
       "add": "ADD",
@@ -45,7 +69,31 @@ export const resources = {
       "language": "Language",
       "themeLight": "Switch to light theme",
       "themeDark": "Switch to dark theme",
-      "themeRadioactive": "Switch to radioactive theme"
+      "themeRadioactive": "Switch to radioactive theme",
+      "aiCheckingTitle": "Checking AI",
+      "aiCheckingDescription": "Checking whether your browser supports local artificial intelligence.",
+      "aiReadyTitle": "AI ready",
+      "aiReadyDescription": "The model is ready to use AI features.",
+      "aiDownloadTitle": "Set up artificial intelligence",
+      "aiDownloadDescription": "Your browser is compatible. Download the model to enable AI features.",
+      "aiDownloadingDescription": "The browser is downloading the model. You can follow its progress here.",
+      "aiUnavailableTitle": "AI features unavailable",
+      "aiUnavailableDescription": "Your browser or device cannot run the required model. You can continue using your task list normally.",
+      "aiErrorTitle": "AI availability error",
+      "aiErrorDescription": "Unable to check model availability.",
+      "aiDownloading": "Preparing the model...",
+      "aiProgress": "Download progress",
+      "aiDownload": "Download AI model",
+      "aiContinueDownload": "Continue download",
+      "aiDownloadFailed": "Unable to prepare the model. Please try again.",
+      "aiRetry": "Retry",
+      "aiClose": "Close",
+      "aiGenerate": "Generate task with AI",
+      "aiGenerating": "GENERATING...",
+      "aiGenerateFailed": "Unable to generate the task. Please try again.",
+      "aiLocalNote": "ToDo IA runs artificial intelligence locally on your device. Your tasks are not sent to external AI servers. The initial model download may require an Internet connection.",
+      "aiModelPreparing": "Preparing the local AI model.",
+      "aiModelReady": "Local AI model ready."
     }
   }
 };

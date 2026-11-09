@@ -4,6 +4,7 @@ import sun from '../../img/svg/sun.svg';
 import undo from '../../img/svg/undo.svg';
 import redo from '../../img/svg/redo.svg';
 import share from '../../img/svg/share.svg';
+import sparkles from '../../img/svg/sparkles.svg';
 import styles from './Icon.module.css';
 
 const icons = {
@@ -13,6 +14,7 @@ const icons = {
   undo,
   redo,
   share,
+  sparkles,
 };
 
 export default function Icon({ name, size = 24 }) {

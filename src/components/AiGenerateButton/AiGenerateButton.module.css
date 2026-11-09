@@ -1,0 +1,77 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.panel .button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 220px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.button::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 4px;
+  pointer-events: none;
+}
+
+/* Cargando: progreso simulado de 0 a 90 %. */
+
+.button:global(.ai-model-loading)::after {
+  width: var(--ai-model-progress, 0%);
+  background: #f59e0b;
+}
+
+/* Preparado: barra verde completa. */
+
+.button:global(.ai-model-ready)::after {
+  width: 100%;
+  background: #16a34a;
+  transition: width 450ms ease-out;
+}
+
+/* Modelo no disponible. */
+
+.button:global(.ai-model-idle)::after {
+  width: 100%;
+  background: #9ca3af;
+  opacity: 0.6;
+}
+
+.feedback {
+  width: 100%;
+  margin: 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--muted-color, #555555);
+}
+
+@media (max-width: 580px) {
+  .panel {
+    padding: 16px 12px;
+    text-align: center;
+  }
+
+  .panel .button {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button:global(.ai-model-ready)::after {
+    transition: none;
+  }
+}
