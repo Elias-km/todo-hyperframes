@@ -144,3 +144,14 @@
   font-size: 13px;
   line-height: 1.5;
 }
+
+/* Categorías presentes en las tareas seleccionadas.
+   No modifica tamaño, padding ni distribución de pills. */
+
+.chip[data-selected-task-category='true'] {
+  box-shadow: inset 0 -3px 0 var(--filter-color);
+}
+
+.chip.active[data-selected-task-category='true'] {
+  box-shadow: inset 0 -3px 0 #ffffff;
+}

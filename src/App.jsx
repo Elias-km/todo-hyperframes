@@ -62,6 +62,14 @@ export default function App({ initialTodos }) {
     dispatch,
   });
 
+  const selectedTaskCategoryIds = new Set(
+    state.todos
+      .filter((todo) => state.selectedIds.has(todo.id))
+      .flatMap((todo) =>
+        Array.isArray(todo.conceptIds) ? todo.conceptIds : []
+      )
+  );
+
   const filters = useTodoFilters({
     todos: displayTodos,
     concepts: FILTER_CONCEPTS,
@@ -232,6 +240,7 @@ export default function App({ initialTodos }) {
 
         <TodoFilters
           isCategorizing={isCategorizing}
+          selectedTaskCategoryIds={selectedTaskCategoryIds}
           todoCount={state.todos.length}
           filters={filters.visibleFilters}
           selectedIds={filters.selectedIds}

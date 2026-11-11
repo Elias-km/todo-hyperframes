@@ -7,6 +7,7 @@ export default function TodoFilters({
   todoCount = 0,
   isCategorizing = false,
   selectedIds,
+  selectedTaskCategoryIds = new Set(),
   colors,
   allSelected,
   onToggle,
@@ -60,6 +61,9 @@ export default function TodoFilters({
             }}
             aria-label={`${filter.label}: ${filter.count}`}
             aria-pressed={active}
+            data-selected-task-category={
+              selectedTaskCategoryIds.has(filter.id)
+            }
             onClick={() => onToggle(filter.id)}
           >
             <span>{filter.label}</span>
