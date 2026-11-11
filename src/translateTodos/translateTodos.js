@@ -96,7 +96,19 @@ export async function translateTodos({
     const batch = todos.slice(offset, offset + BATCH_SIZE);
     const session = await model.create(options);
 
+    let sessionClosed = false;
+
+    const abortSession = () => {
+      if (sessionClosed) return;
+      sessionClosed = true;
+      session.destroy();
+    };
+    signal?.addEventListener('abort', abortSession, { once: true });
+
     try {
+      if (signal?.aborted) {
+        throw new DOMException('Operation cancelled', 'AbortError');
+      }
       const prompt = i18n.getFixedT(
         targetLanguage,
         'prompts'
@@ -153,7 +165,8 @@ export async function translateTodos({
         };
       }
     } finally {
-      session.destroy();
+      signal?.removeEventListener('abort', abortSession);
+      abortSession();
     }
   }
 

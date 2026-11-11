@@ -6,9 +6,11 @@ import userEvent from '@testing-library/user-event';
 import App from '../../src/App.jsx';
 import { loadTodos } from '../../src/todoStorage/todoStorage.js';
 
+// Estos fixtures ya están etiquetados: las pruebas ajenas a filtros no
+// deben arrancar clasificaciones en segundo plano.
 const initialTodos = [
-  { id: '1', text: 'Plan my week' },
-  { id: '2', text: 'Buy groceries' },
+  { id: '1', text: 'Plan my week', conceptIds: ['organizacion'], tagsVersion: 1 },
+  { id: '2', text: 'Buy groceries', conceptIds: ['compras'], tagsVersion: 1 },
 ];
 
 beforeEach(() => {
@@ -19,7 +21,7 @@ beforeEach(() => {
     create: vi.fn().mockResolvedValue({
       clone: vi.fn().mockResolvedValue({
         prompt: vi.fn().mockResolvedValue(
-          JSON.stringify({ text: 'Tarea de prueba' })
+          JSON.stringify({ text: 'Tarea de prueba', tags: ['organizacion'] })
         ),
         destroy: vi.fn(),
       }),
@@ -225,7 +227,7 @@ describe('Generación de tareas con IA', () => {
       availability: vi.fn().mockResolvedValue('available'),
       create: vi.fn().mockResolvedValue({
         prompt: vi.fn().mockResolvedValue(
-          JSON.stringify({ text: 'Pasear al perro' })
+          JSON.stringify({ text: 'Pasear al perro', tags: ['mascotas'] })
         ),
         destroy,
       }),
@@ -439,7 +441,8 @@ describe('Progreso durante generación IA', () => {
     expect(button.disabled).toBe(true);
 
     resolvePrompt(JSON.stringify({
-      text: 'Revisar el calendario',
+      text: 'Comprobar el cierre de la caja de herramientas',
+      tags: ['bricolaje'],
     }));
 
     await waitFor(() => {
@@ -447,7 +450,7 @@ describe('Progreso durante generación IA', () => {
     });
 
     expect(screen.getByRole('button', {
-      name: 'Revisar el calendario',
+      name: 'Comprobar el cierre de la caja de herramientas',
     })).toBeTruthy();
   });
 });
@@ -485,8 +488,8 @@ describe('Cambio de idioma con traducción local', () => {
     const user = userEvent.setup();
 
     render(<App initialTodos={[
-      { id: '1', text: 'Comprar pan' },
-      { id: '2', text: 'Pasear al perro' },
+      { id: '1', text: 'Comprar pan', conceptIds: ['compras'], tagsVersion: 1 },
+      { id: '2', text: 'Pasear al perro', conceptIds: ['mascotas'], tagsVersion: 1 },
     ]} />);
 
     const generateButton = screen.getByRole('button', {
@@ -592,7 +595,7 @@ describe('Generación durante una traducción', () => {
     }));
 
     const generationPrompt = vi.fn().mockResolvedValue(
-      JSON.stringify({ text: 'Walk the dog' })
+      JSON.stringify({ text: 'Walk the dog', tags: ['mascotas'] })
     );
 
     const model = {
@@ -627,6 +630,8 @@ describe('Generación durante una traducción', () => {
           id: '1',
           text: 'Comprar pan',
           originalLanguage: 'es',
+          conceptIds: ['compras'],
+          tagsVersion: 1,
         },
       ]} />);
 
@@ -687,5 +692,88 @@ describe('Generación durante una traducción', () => {
 
       await changeLanguage('es');
     }
+  });
+});
+
+
+
+
+describe('Etiquetado fijo - integración', () => {
+  it('etiqueta manualmente sin modificar el título', async () => {
+    const { changeLanguage } = await import('../../src/i18n/i18n.js');
+    await changeLanguage('es');
+    vi.stubGlobal('LanguageModel', {
+      availability: vi.fn().mockResolvedValue('available'),
+      create: vi.fn().mockResolvedValue({
+        clone: vi.fn().mockResolvedValue({
+          prompt: vi.fn().mockResolvedValue(JSON.stringify({ tags: ['hogar'] })),
+          destroy: vi.fn(),
+        }),
+        destroy: vi.fn(),
+      }),
+    });
+    const user = userEvent.setup();
+    render(<App initialTodos={[]} />);
+    const form = await openForm(user);
+    await user.type(within(form).getByRole('textbox'), 'Ordenar el armario');
+    await user.click(within(form).getByRole('button', { name: 'AÑADIR' }));
+    await waitFor(() => {
+      expect(loadTodos()[0].conceptIds).toEqual(['hogar']);
+    }, { timeout: 4000 });
+    expect(loadTodos()[0].text).toBe('Ordenar el armario');
+  });
+
+  it('crea la tarea y sus etiquetas en una única generación', async () => {
+    const { changeLanguage } = await import('../../src/i18n/i18n.js');
+    await changeLanguage('es');
+    const prompt = vi.fn().mockResolvedValue(JSON.stringify({
+      text: 'Inspeccionar los goteros del macetero', tags: ['hogar', 'jardineria'],
+    }));
+    vi.stubGlobal('LanguageModel', {
+      availability: vi.fn().mockResolvedValue('available'),
+      create: vi.fn().mockResolvedValue({
+        clone: vi.fn().mockResolvedValue({ prompt, destroy: vi.fn() }),
+        destroy: vi.fn(),
+      }),
+    });
+    render(<App initialTodos={[]} />);
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Generar tarea con IA' }).disabled)
+        .toBe(false);
+    });
+    await userEvent.setup().click(screen.getByRole('button', {
+      name: 'Generar tarea con IA',
+    }));
+    await waitFor(() => expect(loadTodos()[0].conceptIds)
+      .toEqual(['hogar', 'jardineria']));
+    expect(prompt).toHaveBeenCalledOnce();
+    expect(loadTodos()[0].tagsVersion).toBe(1);
+  });
+
+  it('muestra tres filtros con cuatro tareas y Todos sigue independiente', async () => {
+    const { changeLanguage } = await import('../../src/i18n/i18n.js');
+    await changeLanguage('es');
+    const todo = (id, text, ids) => ({
+      id, text, originalLanguage: 'es',
+      conceptIds: ids, tagsVersion: 1,
+    });
+    const user = userEvent.setup();
+    render(<App initialTodos={[
+      todo('1', 'Limpiar cocina', ['hogar','limpieza']),
+      todo('2', 'Ordenar ropa', ['hogar']),
+      todo('3', 'Comprar fruta', ['compras']),
+      todo('4', 'Comprar leche', ['compras']),
+    ]} />);
+    const all = screen.getByRole('button', { name: 'Todos' });
+    const home = screen.getByRole('button', { name: 'Hogar: 2' });
+    expect(screen.getByRole('button', { name: 'Comprar fruta' })).toBeTruthy();
+    await user.click(home);
+    expect(all.getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByRole('button', { name: 'Comprar fruta' })).toBeTruthy();
+    await user.click(all);
+    expect(screen.queryByRole('button', { name: 'Comprar fruta' })).toBeNull();
+    await user.click(home);
+    expect(all.getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByRole('button', { name: 'Comprar fruta' })).toBeTruthy();
   });
 });

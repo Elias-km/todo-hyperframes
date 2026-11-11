@@ -2,19 +2,17 @@ import i18n from '../i18n/i18n.js';
 import { createTaskSession } from '../aiService/aiService.js';
 import { runAiExclusive } from '../aiService/aiQueue.js';
 import { isConfidentlyWrongLanguage } from '../aiService/verifyTaskLanguage.js';
-import { examples } from './examples.js';
-
-const LANGUAGE_INDEX = {
-  es: 0,
-  en: 1,
-};
+import { catalogForPrompt, sanitizeTags } from '../filterTodos/filterCatalog.js';
+import { getTenExamples } from './sampleExamples.js';
+import { isRepeatedTask } from './generationGuard.js';
 
 const schema = {
   type: 'object',
   properties: {
     text: { type: 'string' },
+    tags: { type: 'array', items: { type: 'string' } },
   },
-  required: ['text'],
+  required: ['text', 'tags'],
   additionalProperties: false,
 };
 
@@ -26,66 +24,65 @@ export async function generateTodo({
   if (typeof model?.create !== 'function') {
     throw new Error('AI unavailable');
   }
-
-  if (!Object.hasOwn(LANGUAGE_INDEX, language)) {
+  if (!['es', 'en'].includes(language)) {
     throw new Error('Unsupported language');
   }
 
-  const index = LANGUAGE_INDEX[language];
-
-  const sample = [...examples]
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 12)
-    .map((item) => item[index]);
-
-  const existing = existingTodos.map((todo) => todo.text);
-
   const t = i18n.getFixedT(language, 'prompts');
-
-  const prompt = t('generateTodo', {
-    examples: sample.join('\n'),
-    existing: JSON.stringify(existing),
-  });
+  const categories = JSON.stringify(catalogForPrompt());
 
   return runAiExclusive(async () => {
     const session = await createTaskSession(language, model);
 
     try {
-      for (let attempt = 0; attempt < 2; attempt++) {
-        const instructions = attempt === 0
-          ? prompt
-          : `${prompt}\n\n${language === 'en'
-            ? 'Your previous response was in the wrong language. Write the new task ONLY in English.'
-            : 'La respuesta anterior estaba en otro idioma. Escribe la nueva tarea SOLO en español.'}`;
+      let rejectedText = '';
+      let rejectionReason = '';
 
-        const result = await session.prompt(instructions, {
-          responseConstraint: schema,
+      for (let attempt = 0; attempt < 2; attempt++) {
+        // Diez muestras distintas por petición; el mazo evita repetir
+        // muestras entre generaciones hasta agotar el catálogo.
+        const shownExamples = getTenExamples(language);
+        const prompt = t('generateTodo', {
+          examples: shownExamples.join('\n'),
+          categories,
         });
 
-        const text = JSON.parse(result).text?.trim();
+        const correction = !rejectedText ? '' :
+          language === 'en'
+            ? `\nPrevious task rejected (${rejectionReason}): ${JSON.stringify(rejectedText)}. Choose a DIFFERENT task and action.`
+            : `\nTarea anterior rechazada (${rejectionReason}): ${JSON.stringify(rejectedText)}. Elige una tarea y acción DIFERENTES.`;
+
+        const raw = await session.prompt(prompt + correction, {
+          responseConstraint: schema,
+        });
+        const parsed = JSON.parse(raw);
+        const text = parsed?.text?.trim();
 
         if (!text || text.length > 120) {
           throw new Error('Invalid generated task');
         }
 
-        if (existing.some((item) =>
-          item.toLocaleLowerCase(language) ===
-          text.toLocaleLowerCase(language)
-        )) {
-          throw new Error('Duplicate generated task');
+        if (isRepeatedTask(text, existingTodos, shownExamples)) {
+          rejectedText = text;
+          rejectionReason = 'duplicate or copied example';
+          continue;
         }
 
         if (await isConfidentlyWrongLanguage(text, language)) {
-          if (attempt === 0) continue;
-          throw new Error('Wrong generated language');
+          rejectedText = text;
+          rejectionReason = 'wrong language';
+          continue;
         }
 
-        return text;
+        return {
+          text,
+          conceptIds: sanitizeTags(parsed?.tags),
+        };
       }
 
-      throw new Error('Wrong generated language');
+      throw new Error('Repeated or invalid generated task');
     } finally {
       session.destroy();
     }
-  });
+  }, { priority: 'interactive' });
 }

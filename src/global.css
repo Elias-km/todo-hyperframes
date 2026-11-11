@@ -343,9 +343,6 @@ input:focus-visible {
 /* Theme selector */
 
 
-
-
-
 /* Radioactive theme */
 
 :root[data-theme='radioactive'] {
@@ -406,7 +403,6 @@ input:focus-visible {
 :root[data-theme='radioactive'] input:focus-visible {
   outline-color: #faff57;
 }
-
 
 
 /* Radioactive liquid effects */
@@ -536,8 +532,6 @@ input:focus-visible {
 }
 
 @media (max-width: 580px) {
-
-
 
 
   .actions-right {

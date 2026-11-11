@@ -1,3 +1,5 @@
+import { completeTaskTags } from '../filterTodos/taskTagRules.js';
+
 function applyCachedTranslations(todos, action) {
   let changed = false;
 
@@ -41,8 +43,17 @@ function applyCachedTranslations(todos, action) {
 }
 
 export function createInitialState(todos = []) {
+  // Una única migración en memoria al arrancar: sin petición a la IA.
+  // El efecto de persistencia de App guarda los IDs corregidos.
+  const normalizedTodos = todos.map((todo) => {
+    if (todo.tagsVersion !== 1 || !Array.isArray(todo.conceptIds)) return todo;
+    const ids = completeTaskTags(todo.text, todo.conceptIds);
+    const same = ids.length === todo.conceptIds.length &&
+      ids.every((id, index) => id === todo.conceptIds[index]);
+    return same ? todo : { ...todo, conceptIds: ids };
+  });
   return {
-    todos,
+    todos: normalizedTodos,
     selectedIds: new Set(),
     history: [],
     future: [],
@@ -67,6 +78,8 @@ export function todoReducer(state, action) {
 
       if (!text || !action.id) return state;
 
+      const labels = completeTaskTags(text, action.conceptIds);
+
       return saveHistory(state, [
         ...state.todos,
         {
@@ -75,8 +88,37 @@ export function todoReducer(state, action) {
           ...(action.language === 'es' || action.language === 'en'
             ? { originalLanguage: action.language }
             : {}),
+          ...(labels.length > 0 ? { conceptIds: labels, tagsVersion: 1 } : {}),
         },
       ]);
+    }
+
+    case 'assignFixedTags': {
+      const ids = completeTaskTags(action.text, action.conceptIds);
+      if (ids.length === 0 || typeof action.id !== 'string' ||
+          typeof action.text !== 'string') return state;
+
+      const apply = (todos) => {
+        let changed = false;
+        const result = todos.map((todo) => {
+          if (todo.id !== action.id || todo.text !== action.text) return todo;
+          if (todo.tagsVersion === 1 &&
+              todo.conceptIds?.length === ids.length &&
+              todo.conceptIds.every((id, index) => id === ids[index])) {
+            return todo;
+          }
+          changed = true;
+          return { ...todo, conceptIds: ids, tagsVersion: 1 };
+        });
+        return changed ? result : todos;
+      };
+
+      return {
+        ...state,
+        todos: apply(state.todos),
+        history: state.history.map(apply),
+        future: state.future.map(apply),
+      };
     }
 
     case 'tagOriginalLanguage': {

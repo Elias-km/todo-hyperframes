@@ -8,6 +8,8 @@ export default function TodoItem({
   selected,
   translating = false,
   targetLanguage = 'es',
+  activeFilterIds = new Set(),
+  filterColors = {},
   onToggle,
   onRemove,
 }) {
@@ -20,6 +22,21 @@ export default function TodoItem({
         onClick={() => onToggle(todo.id)}
         onDoubleClick={() => onRemove(todo.id)}
       >
+        {activeFilterIds.size > 0 && (
+          <span className={styles.filterRail} aria-hidden="true">
+            {todo.conceptIds
+              ?.filter((id) => activeFilterIds.has(id))
+              .map((id) => (
+                <span
+                  key={id}
+                  className={styles.filterSegment}
+                  data-concept-segment={id}
+                  style={{ backgroundColor: filterColors[id] }}
+                />
+              ))}
+          </span>
+        )}
+
         <span className={styles.text}>{todo.text}</span>
 
         {translating && (

@@ -175,3 +175,63 @@ describe('Migración del idioma original', () => {
     expect(result.todos[0].originalLanguage).toBe('en');
   });
 });
+
+
+
+describe('Etiquetado fijo y Undo/Redo', () => {
+  it('guarda las etiquetas de tareas generadas', () => {
+    const state = todoReducer(createInitialState(), {
+      type: 'add', id: '1', text: 'Comprar pan', language: 'es',
+      conceptIds: ['compras'],
+    });
+    expect(state.todos[0].conceptIds).toEqual(['compras']);
+    expect(state.todos[0].tagsVersion).toBe(1);
+  });
+
+  it('etiqueta una tarea manual sin crear paso de historial', () => {
+    const initial = createInitialState([{ id: '1', text: 'Limpiar' }]);
+    const state = todoReducer(initial, {
+      type: 'assignFixedTags', id: '1', text: 'Limpiar',
+      conceptIds: ['hogar', 'limpieza'],
+    });
+    expect(state.todos[0].conceptIds).toEqual(['hogar', 'limpieza']);
+    expect(state.history).toHaveLength(0);
+  });
+
+  it('conserva las etiquetas al deshacer y rehacer', () => {
+    let state = createInitialState([{ id: '1', text: 'Comprar pan' }]);
+    state = todoReducer(state, {
+      type: 'add', id: '2', text: 'Comprar fruta', language: 'es',
+    });
+    state = todoReducer(state, {
+      type: 'assignFixedTags', id: '1', text: 'Comprar pan',
+      conceptIds: ['compras'],
+    });
+    state = todoReducer(state, { type: 'undo' });
+    expect(state.todos[0].conceptIds).toEqual(['compras']);
+    state = todoReducer(state, { type: 'redo' });
+    expect(state.todos[0].conceptIds).toEqual(['compras']);
+  });
+});
+
+describe('Asociaciones domésticas de tareas existentes', () => {
+  it('completa etiquetas guardadas sin modificar título ni traducciones', () => {
+    const input = [{
+      id: '1', text: 'Regar las plantas',
+      tagsVersion: 1, conceptIds: ['jardineria'],
+      translations: { en: 'Water the plants' },
+    }];
+    const state = createInitialState(input);
+    expect(state.todos[0].conceptIds).toEqual(['hogar', 'jardineria']);
+    expect(state.todos[0].translations.en).toBe('Water the plants');
+    expect(state.todos[0].text).toBe('Regar las plantas');
+  });
+  it('completa las etiquetas de una tarea manual', () => {
+    const state = createInitialState([{ id: '1', text: 'Lavar los platos' }]);
+    const updated = todoReducer(state, {
+      type: 'assignFixedTags', id: '1', text: 'Lavar los platos',
+      conceptIds: ['limpieza'],
+    });
+    expect(updated.todos[0].conceptIds).toEqual(['hogar', 'limpieza']);
+  });
+});

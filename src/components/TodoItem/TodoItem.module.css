@@ -4,6 +4,7 @@
 }
 
 .button {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -88,4 +89,26 @@
     animation: none;
     opacity: 1;
   }
+}
+
+/* Segmentos de los filtros activos que coinciden con la tarea. */
+
+.filterRail {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  width: 4px;
+  overflow: hidden;
+  border-radius: 3px;
+  pointer-events: none;
+}
+
+.filterSegment {
+  display: block;
+  flex: 1;
+  min-height: 2px;
 }

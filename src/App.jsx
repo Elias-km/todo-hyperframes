@@ -7,6 +7,10 @@ import AiSetupDialog from './components/AiSetupDialog/AiSetupDialog.jsx';
 import useAiModel from './aiService/useAiModel.js';
 import AiGenerateButton from './components/AiGenerateButton/AiGenerateButton.jsx';
 import useTodoTranslation from './translateTodos/useTodoTranslation.js';
+import useTodoTagging from './filterTodos/useTodoTagging.js';
+import { FILTER_CONCEPTS } from './filterTodos/filterCatalog.js';
+import useTodoFilters from './filterTodos/useTodoFilters.js';
+import TodoFilters from './components/TodoFilters/TodoFilters.jsx';
 import TodoForm from './components/TodoForm/TodoForm.jsx';
 import TodoList from './components/TodoList/TodoList.jsx';
 import {
@@ -15,7 +19,7 @@ import {
 } from './todoReducer/todoReducer.js';
 import { saveTodos } from './todoStorage/todoStorage.js';
 import { shareTodos } from './shareTodos/shareTodos.js';
-import { loadTheme, saveTheme } from "./theme/theme.js";
+import { loadTheme, saveTheme } from './theme/theme.js';
 
 export default function App({ initialTodos }) {
   const { t, i18n } = useTranslation();
@@ -49,6 +53,20 @@ export default function App({ initialTodos }) {
     aiStatus: ai.status,
     dispatch,
   });
+
+  useTodoTagging({
+    todos: state.todos,
+    language,
+    aiReady: ai.ready,
+    translating,
+    dispatch,
+  });
+
+  const filters = useTodoFilters({
+    todos: displayTodos,
+    concepts: FILTER_CONCEPTS,
+    language,
+  });
   useEffect(() => {
     saveTodos(state.todos);
   }, [state.todos]);
@@ -81,7 +99,9 @@ export default function App({ initialTodos }) {
     dispatch(action);
   }
 
-  function addTodo(text) {
+  function addTodo(text, conceptIds) {
+    // Mostrar la tarea nueva aunque haya filtros activos.
+    filters.clear();
     scrollAfterAddRef.current = true;
 
     handleAction({
@@ -89,6 +109,7 @@ export default function App({ initialTodos }) {
       id: crypto.randomUUID(),
       text,
       language,
+      conceptIds,
     });
   }
 
@@ -209,20 +230,32 @@ export default function App({ initialTodos }) {
 
         <p className="description">{t('description')}</p>
 
+        <TodoFilters
+          todoCount={state.todos.length}
+          filters={filters.visibleFilters}
+          selectedIds={filters.selectedIds}
+          allSelected={filters.allSelected}
+          colors={filters.colors}
+          onToggle={filters.toggle}
+          onToggleAll={filters.toggleAll}
+        />
+
         <TodoList
           listRef={listRef}
-          todos={displayTodos}
+          todos={filters.filteredTodos}
           translating={translating}
           pendingTranslationIds={pendingTranslationIds}
           targetLanguage={language}
           translationError={translationError}
+          activeFilterIds={filters.selectedIds}
+          filterColors={filters.colors}
           selectedIds={state.selectedIds}
           onToggle={(id) => handleAction({ type: 'toggle', id })}
           onRemove={(id) => handleAction({ type: 'remove', id })}
         />
 
         <p className="sr-only" role="status">
-{t('items', { count: state.todos.length })}.{' '}
+          {t('items', { count: state.todos.length })}.{' '}
           {t('selected', { count: state.selectedIds.size })}.
         </p>
 
@@ -289,7 +322,7 @@ export default function App({ initialTodos }) {
         )}
         <AiGenerateButton
           ai={ai}
-          todos={displayTodos}
+          todos={state.todos}
           language={language}
           onAdd={addTodo}
         />

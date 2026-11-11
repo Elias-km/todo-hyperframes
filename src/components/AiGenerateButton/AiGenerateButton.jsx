@@ -6,8 +6,8 @@ import styles from './AiGenerateButton.module.css';
 
 export default function AiGenerateButton({
   ai,
-  todos,
   language,
+  todos = [],
   onAdd,
 }) {
   const { t } = useTranslation();
@@ -28,12 +28,9 @@ export default function AiGenerateButton({
     ai.beginGeneration();
 
     try {
-      const text = await generateTodo({
-        language,
-        existingTodos: todos,
-      });
+      const { text, conceptIds } = await generateTodo({ language, existingTodos: todos });
 
-      onAdd(text);
+      onAdd(text, conceptIds);
     } catch (error) {
       if (error?.message === 'AI unavailable') {
         ai.reportUnavailable();

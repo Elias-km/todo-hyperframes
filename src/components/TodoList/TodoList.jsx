@@ -12,6 +12,8 @@ export default function TodoList({
   pendingTranslationIds = new Set(),
   targetLanguage = 'es',
   translationError = false,
+  activeFilterIds = new Set(),
+  filterColors = {},
 }) {
   const { t } = useTranslation();
 
@@ -35,6 +37,8 @@ export default function TodoList({
             key={todo.id}
             todo={todo}
             selected={selectedIds.has(todo.id)}
+            activeFilterIds={activeFilterIds}
+            filterColors={filterColors}
             translating={translating && pendingTranslationIds.has(todo.id)}
             targetLanguage={targetLanguage}
             onToggle={onToggle}

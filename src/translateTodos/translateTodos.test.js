@@ -145,3 +145,43 @@ describe('Idioma de las instrucciones de traducción', () => {
     );
   });
 });
+
+describe('Cancelación de traducción', () => {
+  it('destruye la sesión y libera la cola al cancelar un prompt', async () => {
+    const controller = new AbortController();
+    const destroy = vi.fn();
+
+    let notifyStarted;
+    const started = new Promise((resolve) => {
+      notifyStarted = resolve;
+    });
+
+    const model = {
+      availability: vi.fn().mockResolvedValue('available'),
+      create: vi.fn().mockResolvedValue({
+        prompt: vi.fn(() => {
+          notifyStarted();
+          return new Promise(() => {});
+        }),
+        destroy,
+      }),
+    };
+
+    const translation = translateTodos({
+      todos: [{ id: '1', text: 'Comprar pan' }],
+      sourceLanguage: 'es',
+      targetLanguage: 'en',
+      model,
+      signal: controller.signal,
+    });
+
+    await started;
+    controller.abort();
+
+    await expect(translation).rejects.toMatchObject({
+      name: 'AbortError',
+    });
+
+    expect(destroy).toHaveBeenCalledOnce();
+  });
+});

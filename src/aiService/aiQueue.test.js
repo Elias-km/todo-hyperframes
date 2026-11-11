@@ -64,3 +64,31 @@ describe('Cola de operaciones IA', () => {
     expect(operation).not.toHaveBeenCalled();
   });
 });
+
+describe('Cancelación de operación activa', () => {
+  it('libera la cola aunque la operación cancelada nunca termine', async () => {
+    const controller = new AbortController();
+
+    let notifyStarted;
+    const started = new Promise((resolve) => {
+      notifyStarted = resolve;
+    });
+
+    const blocked = runAiExclusive(() => {
+      notifyStarted();
+      return new Promise(() => {});
+    }, { signal: controller.signal });
+
+    await started;
+
+    const following = runAiExclusive(() => 'siguiente tarea');
+
+    controller.abort();
+
+    await expect(blocked).rejects.toMatchObject({
+      name: 'AbortError',
+    });
+
+    await expect(following).resolves.toBe('siguiente tarea');
+  });
+});

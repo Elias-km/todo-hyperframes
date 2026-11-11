@@ -1,3 +1,5 @@
+import { extraExamples } from './examplesExtra.js';
+
 export const examples = [
   ['Comprar productos de limpieza', 'Buy cleaning supplies'],
   ['Ordenar el trastero', 'Organize the storage room'],
@@ -57,4 +59,5 @@ export const examples = [
   ['Planificar el fin de semana', 'Plan the weekend'],
   ['Visitar un museo', 'Visit a museum'],
   ['Organizar fotografías', 'Organize photographs'],
+  ...extraExamples,
 ];
