@@ -1,0 +1,31 @@
+.spark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  line-height: 0;
+  color: inherit;
+}
+
+.animated {
+  animation: ai-sparkle 1.5s ease-in-out infinite;
+}
+
+@keyframes ai-sparkle {
+  0%, 100% {
+    transform: scale(0.8) rotate(-12deg);
+    opacity: 0.45;
+  }
+
+  50% {
+    transform: scale(1.15) rotate(12deg);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated {
+    animation: none;
+    opacity: 1;
+  }
+}

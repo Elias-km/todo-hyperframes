@@ -1,10 +1,11 @@
 import { useTranslation } from 'react-i18next';
-import Icon from '../Icon/Icon.jsx';
+import AiSpark from '../AiSpark/AiSpark.jsx';
 import styles from './TodoFilters.module.css';
 
 export default function TodoFilters({
   filters,
   todoCount = 0,
+  isCategorizing = false,
   selectedIds,
   colors,
   allSelected,
@@ -17,7 +18,7 @@ export default function TodoFilters({
     <section className={styles.panel} aria-label={t('aiFiltersTitle')}>
       <div className={styles.panelHeading}>
         <span className={styles.sparkIcon} aria-hidden="true" data-ai-filter-icon>
-          <Icon name="sparkles" size={22} />
+          <AiSpark size={22} animated={isCategorizing} />
         </span>
         <div className={styles.panelCopy}>
           <strong className={styles.panelTitle}>{t('aiFiltersTitle')}</strong>

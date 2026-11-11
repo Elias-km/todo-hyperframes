@@ -1,6 +1,6 @@
 import flagEn from '../../img/svg/flag-en.svg';
 import flagEs from '../../img/svg/flag-es.svg';
-import Icon from '../Icon/Icon.jsx';
+import AiSpark from '../AiSpark/AiSpark.jsx';
 import styles from './TodoItem.module.css';
 
 export default function TodoItem({
@@ -49,9 +49,7 @@ export default function TodoItem({
               src={targetLanguage === 'en' ? flagEn : flagEs}
               alt=""
             />
-            <span className={styles.translationSparkle}>
-              <Icon name="sparkles" size={16} />
-            </span>
+            <AiSpark size={16} animated />
           </span>
         )}
       </button>

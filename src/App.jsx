@@ -54,7 +54,7 @@ export default function App({ initialTodos }) {
     dispatch,
   });
 
-  useTodoTagging({
+  const { isCategorizing } = useTodoTagging({
     todos: state.todos,
     language,
     aiReady: ai.ready,
@@ -231,6 +231,7 @@ export default function App({ initialTodos }) {
         <p className="description">{t('description')}</p>
 
         <TodoFilters
+          isCategorizing={isCategorizing}
           todoCount={state.todos.length}
           filters={filters.visibleFilters}
           selectedIds={filters.selectedIds}

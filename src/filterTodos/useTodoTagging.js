@@ -69,4 +69,7 @@ export default function useTodoTagging({
     };
   }, [pendingId, pendingText, language, aiReady, translating, dispatch, retryRevision]);
 
+  return {
+    isCategorizing: Boolean(pendingId && aiReady && !translating),
+  };
 }

@@ -61,36 +61,6 @@
   border-radius: 2px;
 }
 
-.translationSparkle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 17px;
-  height: 17px;
-  flex: 0 0 17px;
-  color: currentColor;
-  animation: translation-sparkle 1.5s ease-in-out infinite;
-}
-
-@keyframes translation-sparkle {
-  0%, 100% {
-    transform: scale(0.8) rotate(-12deg);
-    opacity: 0.45;
-  }
-
-  50% {
-    transform: scale(1.15) rotate(12deg);
-    opacity: 1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .translationSparkle {
-    animation: none;
-    opacity: 1;
-  }
-}
-
 /* Segmentos de los filtros activos que coinciden con la tarea. */
 
 .filterRail {
