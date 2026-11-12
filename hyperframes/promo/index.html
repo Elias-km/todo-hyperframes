@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ToDo IA — Promo / HyperFrames</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #070918; }
+    #todo-promo { position: relative; width: 1920px; height: 1080px; overflow: hidden; isolation: isolate; background: #080a1b; color: #fff; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .scene { position: absolute; inset: 0; display: block; overflow: hidden; background: radial-gradient(circle at 75% 30%, #25215b 0%, #101024 40%, #070917 85%); }
+    .scene::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(180deg, transparent 0 4px, rgba(255,255,255,.017) 5px 6px); pointer-events: none; opacity: .55; z-index: 9; }
+    .scene.alt { background: radial-gradient(circle at 76% 35%, #123b54 0%, #101a32 38%, #080b1c 90%); }
+    .scene.green { background: radial-gradient(circle at 70% 42%, #19593a 0%, #071c22 42%, #070c16 90%); }
+    .scene.purple { background: radial-gradient(circle at 75% 34%, #4c255e 0%, #131127 40%, #090a18 90%); }
+    .halo { position:absolute; width:830px; height:830px; border-radius:50%; right:-190px; top:110px; background:radial-gradient(circle,rgba(103,85,255,.27),transparent 65%); filter: blur(13px); pointer-events:none; }
+    .ring { position:absolute; width:1050px; height:1050px; border:1px solid rgba(255,255,255,.10); border-radius:50%; right:-180px; top:10px; pointer-events:none; }
+    .ring::before { content:""; position:absolute; inset:72px; border:1px solid rgba(117,237,255,.17); border-radius:50%; }
+    .topline { position:absolute; left:120px; top:80px; font-size:22px; font-weight:800; letter-spacing: .27em; color:#89dffd; text-transform:uppercase; z-index:4; }
+    .counter { position:absolute; bottom:76px; right:108px; font-size:23px; font-weight:700; letter-spacing:.24em; color:rgba(255,255,255,.55); z-index:4; }
+    .thinrule { position:absolute; left:120px; right:120px; bottom:105px; height:2px; background:linear-gradient(90deg,rgba(123,121,255,.65),rgba(255,255,255,.08)); z-index:4; }
+    .hero { position:absolute; left:120px; top:246px; width:780px; z-index:4; }
+    .hero h2, .hero h1 { margin:0; font-size:111px; font-weight:950; line-height:.98; letter-spacing:-.07em; text-transform:uppercase; text-wrap:balance; }
+    .hero h1 { font-size:151px; }
+    .hero h2.compact { font-size:98px; }
+    .hero p { font-size:33px; line-height:1.35; font-weight:520; color:#c8d0ee; margin:32px 0 0; max-width:700px; }
+    .gradient { color: #ad9bff; }
+    .aqua { color: #7ff0fb; }
+    .lime { color: #c6ff6a; }
+    .smallcaps { display:block; margin-bottom:24px; font-size:25px; color:#b3b6e9; font-weight:800; letter-spacing:.22em; }
+    .brand-large { font-size:194px !important; white-space:nowrap; letter-spacing:-.085em !important; }
+    .large-sub { margin-top:42px !important; color:#fff !important; font-weight:780 !important; letter-spacing:-.02em; }
+    .pill { display:inline-flex; align-items:center; gap:15px; margin-top:40px; padding:14px 24px; border-radius:100px; color:#91f4ff; border:1px solid rgba(145,244,255,.45); background:rgba(145,244,255,.07); font-size:20px; letter-spacing:.09em; text-transform:uppercase; font-weight:780; }
+    .pill .dot { height:12px; width:12px; background:#85f9d0; border-radius:50%; box-shadow:0 0 20px #66ffee; }
+    .interface { position:absolute; z-index:2; width:865px; height:740px; right:105px; top:160px; display:flex; align-items:center; justify-content:center; perspective:1200px; }
+    .interface img { display:block; max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; border-radius:18px; box-shadow:0 45px 120px #0009,0 0 0 2px #ffffff17; background:#14152a; }
+    .interface.wide { width:980px; height:820px; right:52px; top:125px; }
+    .interface.narrow { width:760px; right:125px; }
+    .interface .accent { position:absolute; z-index:-1; inset:9%; border-radius:50%; filter:blur(80px); background:#826cfd55; }
+    .interface .windowbar { position:absolute; top:30px; left:10%; right:10%; height:16px; border-radius:20px; background:linear-gradient(90deg,#91e7ff,#ba96ff,transparent); opacity:.30; z-index:5; }
+    .side-by-side { position:absolute; right:90px; top:180px; width:1080px; height:730px; z-index:3; }
+    .window { position:absolute; width:680px; max-height:710px; display:block; object-fit:contain; border-radius:17px; box-shadow:0 42px 100px #000b,0 0 0 2px #ffffff19; }
+    .window.left { left:0; top:94px; transform:rotate(-6deg); }
+    .window.right { right:0; top:0; transform:rotate(5deg); }
+    .background-giant { position:absolute; top:55%; right:-130px; transform:translateY(-50%); font-size:730px; font-weight:1000; color:#a09cfd12; letter-spacing:-.15em; white-space:nowrap; pointer-events:none; }
+    .intro-symbol { position:absolute; right:185px; top:232px; width:570px; height:570px; border:18px solid #8d81ff; border-radius:120px; transform:rotate(-12deg); box-shadow:0 0 100px #7153ff55,inset 0 0 100px #7153ff2b; }
+    .intro-symbol::after { content:"✓"; position:absolute; inset:-40px 0 0; display:flex; justify-content:center; align-items:center; color:#b4ff87; font-size:425px; font-weight:900; transform:rotate(12deg); text-shadow:0 0 95px #60ff9a55; }
+    .intro-hero { left:115px; top:268px; width:1080px; }
+    .outro-hero { left:160px; top:222px; width:1610px; text-align:center; }
+    .outro-hero h2 { font-size:151px; }
+    .outro-hero p { max-width:none; font-size:42px; margin-top:34px; }
+    .outro-link { margin-top:54px; font-size:33px; color:#91f4ff; letter-spacing:.07em; font-weight:750; }
+    .barline { position:absolute; z-index:8; bottom:0; left:0; right:0; height:13px; background:linear-gradient(90deg,#6ff4f6,#9a78ff,#c7ff74); }
+    .cutflash { position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; z-index:11; }
+    .sound-caption { position:absolute; left:122px; bottom:148px; font-size:20px; font-weight:700; color:#d3d9f180; letter-spacing:.18em; text-transform:uppercase; z-index:4; }
+
+    /* Escena 04: evitar superposiciones */
+    #scene-04 .hero {
+      width: 640px;
+      top: 230px;
+    }
+    #scene-04 .hero h2 {
+      font-size: 96px;
+    }
+    #scene-04 .hero p {
+      max-width: 560px;
+      font-size: 30px;
+    }
+    #scene-04 .side-by-side {
+      right: 40px;
+      top: 175px;
+      width: 1030px;
+    }
+    #scene-04 .window {
+      width: 620px;
+    }
+    #scene-04 .window.left {
+      top: 120px;
+      left: 10px;
+    }
+    #scene-04 .window.right {
+      top: 10px;
+      right: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="todo-promo" data-composition-id="todo-promo" data-start="0" data-duration="30" data-width="1920" data-height="1080">
+
+    <section id="scene-01" class="scene clip" data-start="0" data-duration="3" data-track-index="0">
+      <div class="halo"></div><div class="ring"></div><div class="intro-symbol"></div>
+      <div class="topline">INTRODUCING / TO DO IA</div>
+      <div class="hero intro-hero">
+        <span class="smallcaps" id="intro-kicker">HAZ MÁS. PIENSA MENOS.</span>
+        <h1 id="intro-title" class="brand-large">ToDo <span class="gradient">IA.</span></h1>
+        <p id="intro-text" class="large-sub">TU PRODUCTIVIDAD. <span class="aqua">AMPLIFICADA.</span></p>
+      </div>
+      <div class="sound-caption">LOCAL AI · SMART ORGANIZATION</div><div class="counter">01 / 08</div><div class="thinrule"></div><div class="barline"></div>
+    </section>
+
+    <section id="scene-02" class="scene clip alt" data-start="3" data-duration="4" data-track-index="0">
+      <div class="halo"></div><div class="ring"></div>
+      <div class="topline">01 — TODO EN UN SITIO</div>
+      <div class="hero"><span class="smallcaps">ORGANIZA SIN FRICCIÓN</span><h2>MENOS<br><span class="aqua">CAOS.</span><br>MÁS FOCO.</h2><p>Añade, organiza y recupera tus tareas en segundos.</p></div>
+      <div id="shot-overview" class="interface wide"><div class="accent"></div><img src="assets/captures/01-overview-light-card.png" alt="Interfaz real de tareas en tema claro" /></div>
+      <div class="counter">02 / 08</div><div class="thinrule"></div><div class="barline"></div><div class="cutflash"></div>
+    </section>
+
+    <section id="scene-03" class="scene clip purple" data-start="7" data-duration="4" data-track-index="0">
+      <div class="halo"></div><div class="background-giant">AI</div>
+      <div class="topline">02 — GENERACIÓN INTELIGENTE</div>
+      <div class="hero"><span class="smallcaps">INTELIGENCIA ARTIFICIAL LOCAL</span><h2>IDEAS<br>QUE <span class="gradient">SUMAN.</span></h2><p>Genera tareas con IA o crea las tuyas a mano.</p><div class="pill"><span class="dot"></span>IA EN TU NAVEGADOR</div></div>
+      <div id="shot-creation" class="interface"><div class="accent"></div><img src="assets/captures/01-overview-light-card.png" alt="Vista de tareas con botón de generación por IA" /></div>
+      <div class="counter">03 / 08</div><div class="thinrule"></div><div class="barline"></div><div class="cutflash"></div>
+    </section>
+
+    <section id="scene-04" class="scene clip green" data-start="11" data-duration="4" data-track-index="0">
+      <div class="halo"></div><div class="ring"></div>
+      <div class="topline">03 — FILTROS INTELIGENTES</div>
+      <div class="hero"><span class="smallcaps">ETIQUETADO AUTOMÁTICO</span><h2>ENCUENTRA<br><span class="lime">LO QUE</span><br>IMPORTA.</h2><p>Filtros claros, rápidos y listos para encontrar lo que importa.</p></div>
+      <div class="side-by-side"><img id="filter-before" class="window left" src="assets/captures/02-selected-category-card.png" alt="Categorías asociadas a tareas"/><img id="filter-after" class="window right" src="assets/captures/04-filtered-tasks-card.png" alt="Tareas filtradas"/></div>
+      <div class="counter">04 / 08</div><div class="thinrule"></div><div class="barline"></div><div class="cutflash"></div>
+    </section>
+
+    <section id="scene-05" class="scene clip alt" data-start="15" data-duration="4" data-track-index="0">
+      <div class="halo"></div><div class="ring"></div>
+      <div class="topline">04 — DOS IDIOMAS</div>
+      <div class="hero"><span class="smallcaps">TRADUCCIÓN LOCAL</span><h2>YOUR<br>TASKS.<br><span class="aqua">TU IDIOMA.</span></h2><p>Español e inglés. Las traducciones se reutilizan.</p></div>
+      <div id="shot-english" class="interface"><div class="accent"></div><img src="assets/captures/08-english-translation-card.png" alt="Interfaz real de ToDo IA en inglés"/></div>
+      <div class="counter">05 / 08</div><div class="thinrule"></div><div class="barline"></div><div class="cutflash"></div>
+    </section>
+
+    <section id="scene-06" class="scene clip" data-start="19" data-duration="4" data-track-index="0">
+      <div class="halo"></div><div class="ring"></div>
+      <div class="topline">05 — CONTROL TOTAL</div>
+      <div class="hero"><span class="smallcaps">SELECCIÓN MÚLTIPLE · UNDO / REDO</span><h2>CAMBIA<br>DE IDEA.<br><span class="gradient">SIN MIEDO.</span></h2><p>Selecciona varias tareas, elimina y recupera.</p></div>
+      <div class="side-by-side"><img id="control-before" class="window left" src="assets/captures/09-multi-selection-card.png" alt="Selección múltiple"/><img id="control-after" class="window right" src="assets/captures/11-after-undo-card.png" alt="Tareas restauradas después de deshacer"/></div>
+      <div class="counter">06 / 08</div><div class="thinrule"></div><div class="barline"></div><div class="cutflash"></div>
+    </section>
+
+    <section id="scene-07" class="scene clip green" data-start="23" data-duration="4" data-track-index="0">
+      <div class="halo"></div><div class="ring"></div>
+      <div class="topline">06 — TU ESTILO</div>
+      <div class="hero"><span class="smallcaps">CLARO / OSCURO / RADIOACTIVO</span><h2>CAMBIA<br>EL <span class="lime">CHIP.</span></h2><p>Tres temas. Una forma de hacer más.</p></div>
+      <div class="side-by-side"><img id="theme-dark" class="window left" src="assets/captures/05-dark-theme-card.png" alt="Tema oscuro"/><img id="theme-radioactive" class="window right" src="assets/captures/06-radioactive-theme-card.png" alt="Tema Radioactivo"/></div>
+      <div class="counter">07 / 08</div><div class="thinrule"></div><div class="barline"></div><div class="cutflash"></div>
+    </section>
+
+    <section id="scene-08" class="scene clip purple" data-start="27" data-duration="3" data-track-index="0">
+      <div class="halo"></div><div class="ring"></div>
+      <div class="topline">YOUR NEXT MOVE STARTS HERE</div>
+      <div class="hero outro-hero"><span class="smallcaps">LA LISTA QUE SIGUE TU RITMO</span><h2>HÁZLO <span class="aqua">REALIDAD.</span></h2><p>Organiza. Crea. Avanza.</p><div class="outro-link">elias-km.github.io/todo-hyperframes/</div></div>
+      <div class="counter">08 / 08</div><div class="thinrule"></div><div class="barline"></div><div class="cutflash"></div>
+    </section>
+
+    <audio id="promo-music" data-start="0" data-duration="30" data-track-index="20" data-volume="0.82" data-fade-in="0.35" data-fade-out="1.15" src="assets/audio/todo-pulse.mp3"></audio>
+    <audio id="hit-03" data-start="3" data-duration="0.65" data-track-index="21" data-volume="0.75" src="assets/audio/impact.wav"></audio>
+    <audio id="hit-07" data-start="7" data-duration="0.65" data-track-index="21" data-volume="0.75" src="assets/audio/impact.wav"></audio>
+    <audio id="hit-11" data-start="11" data-duration="0.65" data-track-index="21" data-volume="0.75" src="assets/audio/impact.wav"></audio>
+    <audio id="hit-15" data-start="15" data-duration="0.65" data-track-index="21" data-volume="0.75" src="assets/audio/impact.wav"></audio>
+    <audio id="hit-19" data-start="19" data-duration="0.65" data-track-index="21" data-volume="0.75" src="assets/audio/impact.wav"></audio>
+    <audio id="hit-23" data-start="23" data-duration="0.65" data-track-index="21" data-volume="0.75" src="assets/audio/impact.wav"></audio>
+    <audio id="hit-27" data-start="27" data-duration="0.65" data-track-index="21" data-volume="0.75" src="assets/audio/impact.wav"></audio>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+    <script>
+      // Una sola línea temporal, completamente buscable por HyperFrames.
+      // El framework controla los cortes (class="clip") y el audio.
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const sceneStarts = [0, 3, 7, 11, 15, 19, 23, 27];
+      const sceneEnds = [3, 7, 11, 15, 19, 23, 27, 30];
+      sceneStarts.forEach((start, index) => {
+        const root = `#scene-0${index + 1}`;
+        const duration = sceneEnds[index] - start;
+        tl.fromTo(`${root} .hero`, { autoAlpha: 0, x: -85, scale: .94 }, { autoAlpha: 1, x: 0, scale: 1, ease: 'power3.out', duration: .68 }, start + .12);
+        tl.fromTo(`${root} .topline`, { autoAlpha: 0, y: -28 }, { autoAlpha: 1, y: 0, ease: 'power2.out', duration: .44 }, start + .2);
+        tl.fromTo(`${root} .thinrule`, { scaleX: 0, transformOrigin: 'left center' }, { scaleX: 1, ease: 'power3.out', duration: .62 }, start + .32);
+        tl.to(`${root} .hero`, { autoAlpha: 0, x: -32, duration: .27, ease: 'power2.in' }, start + duration - .3);
+        if (index !== 0) {
+          tl.fromTo(`${root} .cutflash`, { opacity: .66 }, { opacity: 0, duration: .20, ease: 'power2.out' }, start);
+        }
+      });
+      tl.fromTo('#scene-01 .intro-symbol', { opacity: 0, scale: .35, rotation: -75 }, { opacity: 1, scale: 1, rotation: -12, duration: .88, ease: 'back.out(1.7)' }, .14);
+      tl.fromTo('#shot-overview', { opacity: 0, x: 210, scale: .75, rotation: 10 }, { opacity: 1, x: 0, scale: 1, rotation: 0, duration: .8, ease: 'power3.out' }, 3.25);
+      tl.to('#shot-overview', { scale: 1.075, y: -24, duration: 2.5, ease: 'sine.inOut' }, 4.35);
+      tl.fromTo('#shot-creation', { opacity: 0, x: 250, scale: .68, rotation: -8 }, { opacity: 1, x: 0, scale: 1, rotation: 0, duration: .88, ease: 'back.out(1.25)' }, 7.22);
+      tl.to('#shot-creation', { scale: 1.085, duration: 2.4, ease: 'sine.inOut' }, 8.3);
+      for (const [id, start, side] of [['#filter-before', 11.2, 140], ['#filter-after', 11.82, 160], ['#control-before',19.2,-180], ['#control-after',19.8,160], ['#theme-dark',23.2,-180], ['#theme-radioactive',23.85,160]]) {
+        tl.fromTo(id, { autoAlpha: 0, x: side, scale: .80 }, { autoAlpha: 1, x: 0, scale: 1, duration: .76, ease: 'power3.out' }, start);
+      }
+      tl.fromTo('#shot-english', { autoAlpha: 0, y: 190, scale: .78, rotation: 6 }, { autoAlpha: 1, y: 0, scale: 1, rotation: 0, duration: .85, ease: 'power3.out' }, 15.2);
+      tl.to('#shot-english', { scale: 1.09, duration: 2.2, ease: 'sine.inOut' }, 16.4);
+      tl.fromTo('#scene-08 .outro-link', { autoAlpha: 0, y: 38 }, { autoAlpha: 1, y: 0, ease: 'power3.out', duration: .6 }, 28.0);
+      // Garantiza 30 segundos incluso si se recortan animaciones al editar.
+      tl.set({}, {}, 30);
+      window.__timelines['todo-promo'] = tl;
+    </script>
+  </div>
+</body>
+</html>

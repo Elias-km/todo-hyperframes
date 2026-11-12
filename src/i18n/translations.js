@@ -54,7 +54,10 @@ export const resources = {
       "aiModelPreparing": "Preparando el modelo de IA local.",
       "aiModelReady": "Modelo de IA local preparado.",
       "translatingTodos": "Traduciendo tareas...",
-      "translationUnavailable": "No se han podido traducir las tareas. Se conservan los textos originales."
+      "translationUnavailable": "No se han podido traducir las tareas. Se conservan los textos originales.",
+      "watchPromo": "Ver vídeo promo",
+      "promoDialogTitle": "ToDo IA en acción",
+      "promoDialogSubtitle": "Descubre las mejores funcionalidades en un vídeo rápido y enérgico."
     }
   },
   "en": {
@@ -111,7 +114,10 @@ export const resources = {
       "aiModelPreparing": "Preparing the local AI model.",
       "aiModelReady": "Local AI model ready.",
       "translatingTodos": "Translating tasks...",
-      "translationUnavailable": "Tasks could not be translated. Original texts are preserved."
+      "translationUnavailable": "Tasks could not be translated. Original texts are preserved.",
+      "watchPromo": "Watch promo video",
+      "promoDialogTitle": "ToDo IA in action",
+      "promoDialogSubtitle": "Discover the best features in a fast and energetic video."
     }
   }
 };

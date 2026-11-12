@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "source": "ToDo IA · fixtures locales; no son resultados de IA en vivo",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "shots": [
+    {
+      "id": "01-overview-light",
+      "description": "Lista con tareas, IA y filtros visibles · tema claro",
+      "screenshot": "assets/captures/01-overview-light.png",
+      "card": "assets/captures/01-overview-light-card.png"
+    },
+    {
+      "id": "02-selected-category",
+      "description": "Seleccionar una tarea marca internamente sus categorías, sin filtrar",
+      "screenshot": "assets/captures/02-selected-category.png",
+      "card": "assets/captures/02-selected-category-card.png"
+    },
+    {
+      "id": "03-filter-highlight",
+      "description": "Categoría activa y Todas las tareas aún visibles",
+      "screenshot": "assets/captures/03-filter-highlight.png",
+      "card": "assets/captures/03-filter-highlight-card.png"
+    },
+    {
+      "id": "04-filtered-tasks",
+      "description": "Filtro Trabajo aplicado con OR, Todos desactivado",
+      "screenshot": "assets/captures/04-filtered-tasks.png",
+      "card": "assets/captures/04-filtered-tasks-card.png"
+    },
+    {
+      "id": "05-dark-theme",
+      "description": "Tema oscuro de ToDo IA",
+      "screenshot": "assets/captures/05-dark-theme.png",
+      "card": "assets/captures/05-dark-theme-card.png"
+    },
+    {
+      "id": "06-radioactive-theme",
+      "description": "Tema Radioactivo de ToDo IA",
+      "screenshot": "assets/captures/06-radioactive-theme.png",
+      "card": "assets/captures/06-radioactive-theme-card.png"
+    },
+    {
+      "id": "07-add-modal",
+      "description": "Modal real de creación de tarea, con texto escrito",
+      "screenshot": "assets/captures/07-add-modal.png"
+    },
+    {
+      "id": "08-english-translation",
+      "description": "Interfaz inglesa y traducciones precargadas sin inferencia",
+      "screenshot": "assets/captures/08-english-translation.png",
+      "card": "assets/captures/08-english-translation-card.png"
+    },
+    {
+      "id": "09-multi-selection",
+      "description": "Selección múltiple antes de eliminación",
+      "screenshot": "assets/captures/09-multi-selection.png",
+      "card": "assets/captures/09-multi-selection-card.png"
+    },
+    {
+      "id": "10-after-delete",
+      "description": "Tareas eliminadas, posibilidad de deshacer",
+      "screenshot": "assets/captures/10-after-delete.png",
+      "card": "assets/captures/10-after-delete-card.png"
+    },
+    {
+      "id": "11-after-undo",
+      "description": "Tareas restauradas, posibilidad de rehacer",
+      "screenshot": "assets/captures/11-after-undo.png",
+      "card": "assets/captures/11-after-undo-card.png"
+    },
+    {
+      "id": "12-empty-filters",
+      "description": "Mensaje real de umbral de filtros con cero tareas",
+      "screenshot": "assets/captures/12-empty-filters.png",
+      "card": "assets/captures/12-empty-filters-card.png"
+    },
+    {
+      "id": "13-mobile-layout",
+      "description": "Diseño móvil de ToDo IA",
+      "screenshot": "assets/captures/13-mobile-layout.png"
+    }
+  ]
+}

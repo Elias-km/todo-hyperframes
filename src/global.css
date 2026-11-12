@@ -550,3 +550,57 @@ input:focus-visible {
     min-width: 0;
   }
 }
+
+.promo-actions-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+.promo-actions-row .ai-generate-panel {
+  margin-left: auto;
+  flex: 0 1 auto;
+}
+
+@media (max-width: 720px) {
+  .promo-actions-row {
+    gap: 16px;
+  }
+}
+
+/* CENTERED PROMO START */
+
+.promo-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 28px;
+}
+
+.promo-actions-row .ai-generate-panel {
+  margin: 0;
+  padding: 0;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+@media (max-width: 580px) {
+  .promo-actions-row {
+    gap: 16px;
+  }
+
+  .promo-actions-row .ai-generate-panel {
+    flex: 0 1 260px;
+  }
+
+  .promo-actions-row .ai-generate-button {
+    width: 100%;
+    min-width: 0;
+    white-space: normal;
+  }
+}
+
+/* CENTERED PROMO END */

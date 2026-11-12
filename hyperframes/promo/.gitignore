@@ -1,0 +1,4 @@
+# Renders y exportaciones pesadas, nunca comprometidos por accidente.
+*.mp4
+renders/
+output/

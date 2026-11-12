@@ -1,0 +1,332 @@
+.wrap {
+  display: flex;
+  align-items: flex-end;
+  flex: 0 0 auto;
+}
+
+.button {
+  width: 132px;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transform: rotate(-6deg);
+  flex: 0 0 auto;
+}
+
+.card {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  border-radius: 24px;
+  background:
+    linear-gradient(145deg, #f8fbff 0%, #dce5f3 45%, #bec8da 100%);
+  border: 2px solid rgba(31, 41, 55, 0.18);
+  box-shadow:
+    0 16px 34px rgba(15, 23, 42, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.innerFrame {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(127, 240, 251, 0.12), transparent 42%),
+    linear-gradient(180deg, #171c2f 0%, #0c1020 100%);
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.innerFrame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0 4px,
+      rgba(255, 255, 255, 0.03) 4px 6px
+    );
+  pointer-events: none;
+}
+
+.sprocketLeft,
+.sprocketRight {
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  width: 12px;
+  border-radius: 12px;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(244, 247, 252, 0.94) 0 10px,
+      transparent 10px 20px
+    );
+  opacity: 0.95;
+}
+
+.sprocketLeft {
+  left: 10px;
+}
+
+.sprocketRight {
+  right: 10px;
+}
+
+.kicker {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.22em;
+  font-weight: 800;
+  color: #cdd7ea;
+}
+
+.playDisc {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 58px;
+  height: 58px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: linear-gradient(145deg, #9a7eff 0%, #74ebf6 100%);
+  box-shadow:
+    0 0 0 7px rgba(154, 126, 255, 0.12),
+    0 8px 24px rgba(116, 235, 246, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.playTriangle {
+  margin-left: 3px;
+  width: 0;
+  height: 0;
+  border-left: 16px solid #ffffff;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+
+.brand {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.button:hover .card,
+.button:focus-visible .card {
+  box-shadow:
+    0 18px 42px rgba(15, 23, 42, 0.28),
+    0 0 0 3px rgba(116, 235, 246, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.76);
+}
+
+.button:focus-visible {
+  outline: none;
+}
+
+.button:focus-visible .card {
+  outline: 2px solid rgba(116, 235, 246, 0.55);
+  outline-offset: 4px;
+}
+
+@keyframes promoShake {
+  0%   { transform: rotate(-7deg) translate(0, 0); }
+  25%  { transform: rotate(-4deg) translate(1px, -1px); }
+  50%  { transform: rotate(-7deg) translate(-1px, 1px); }
+  75%  { transform: rotate(-4deg) translate(1px, 1px); }
+  100% { transform: rotate(-6deg) translate(0, 0); }
+}
+
+.button:hover {
+  animation: promoShake 0.28s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button:hover {
+    animation: none;
+  }
+}
+
+.dialog {
+  width: min(1180px, calc(100vw - 48px));
+  max-width: 1180px;
+  padding: 0;
+  border: 0;
+  border-radius: 28px;
+  background: #0f1424;
+  color: #fff;
+  box-shadow: 0 35px 90px rgba(0, 0, 0, 0.45);
+}
+
+.dialog::backdrop {
+  background: rgba(5, 10, 20, 0.76);
+  backdrop-filter: blur(4px);
+}
+
+.modal {
+  padding: 22px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.titleBlock {
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+.subtitle {
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.closeButton {
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.video {
+  display: block;
+  width: 100%;
+  max-height: calc(100vh - 200px);
+  border-radius: 18px;
+  background: #000;
+}
+
+@media (max-width: 720px) {
+  .button {
+    width: 116px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+}
+
+/* ZEN FILM BUTTON START */
+
+.wrap {
+  align-items: center;
+}
+
+.button {
+  width: 90px;
+  transform: rotate(-4deg);
+}
+
+.card {
+  padding: 7px;
+  border-radius: 18px;
+  border-width: 1px;
+  box-shadow:
+    0 8px 20px rgba(15, 23, 42, 0.13),
+    inset 0 1px 0 rgba(255,255,255,.6);
+}
+
+.innerFrame {
+  border-radius: 12px;
+}
+
+.sprocketLeft,
+.sprocketRight {
+  top: 8px;
+  bottom: 8px;
+  width: 8px;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(244,247,252,.9) 0 7px,
+    transparent 7px 14px
+  );
+}
+
+.sprocketLeft { left: 6px; }
+.sprocketRight { right: 6px; }
+
+.kicker {
+  top: 10px;
+  font-size: 8px;
+  letter-spacing: .17em;
+}
+
+.playDisc {
+  width: 42px;
+  height: 42px;
+  box-shadow: 0 0 0 4px rgba(154,126,255,.1);
+}
+
+.playTriangle {
+  border-left-width: 11px;
+  border-top-width: 7px;
+  border-bottom-width: 7px;
+}
+
+.brand {
+  bottom: 10px;
+  font-size: 11px;
+}
+
+@keyframes zenFilmShake {
+  0%, 100% { transform: rotate(-4deg); }
+  25% { transform: rotate(-5deg) translateX(-1px); }
+  75% { transform: rotate(-3deg) translateX(1px); }
+}
+
+.button:hover {
+  animation: zenFilmShake .46s ease-in-out infinite;
+}
+
+@media (max-width: 580px) {
+  .button {
+    width: 76px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button:hover {
+    animation: none;
+  }
+}
+
+/* ZEN FILM BUTTON END */

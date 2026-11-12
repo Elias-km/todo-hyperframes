@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "e2e": "playwright test --headed --workers=1"
+    "e2e": "playwright test --headed --workers=1",
+    "capture:promo": "node hyperframes/capture/capture.mjs"
   },
   "dependencies": {
     "i18next": "^26.7.2",

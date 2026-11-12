@@ -6,6 +6,7 @@ import LanguageSelector from './components/LanguageSelector/LanguageSelector.jsx
 import AiSetupDialog from './components/AiSetupDialog/AiSetupDialog.jsx';
 import useAiModel from './aiService/useAiModel.js';
 import AiGenerateButton from './components/AiGenerateButton/AiGenerateButton.jsx';
+import PromoVideoButton from './components/PromoVideoButton/PromoVideoButton.jsx';
 import useTodoTranslation from './translateTodos/useTodoTranslation.js';
 import useTodoTagging from './filterTodos/useTodoTagging.js';
 import { FILTER_CONCEPTS } from './filterTodos/filterCatalog.js';
@@ -330,12 +331,15 @@ export default function App({ initialTodos }) {
             {t(shareFeedback)}
           </p>
         )}
-        <AiGenerateButton
-          ai={ai}
-          todos={state.todos}
-          language={language}
-          onAdd={addTodo}
-        />
+        <div className="promo-actions-row">
+          <PromoVideoButton />
+          <AiGenerateButton
+            ai={ai}
+            todos={state.todos}
+            language={language}
+            onAdd={addTodo}
+          />
+        </div>
 
       </section>
 
